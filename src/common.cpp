@@ -33,11 +33,3 @@ char* formatRupiah(int value) {
     strcat(formatted, " Rp");
     return strdup(formatted);
 }
-
-int main() {
-    int amount = 100000;
-    char* formattedAmount = formatRupiah(amount);
-    printf("%s\n", formattedAmount);
-    free(formattedAmount); // Free memory allocated by strdup
-    return 0;
-}
