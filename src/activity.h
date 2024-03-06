@@ -7,6 +7,7 @@ struct Activity {
     char jenis[20];  // Pemasukan, Pengeluaran, Transfer
     char kategori[20];
     int nominal;
+    int id_dompet;
 };
 
 void buatActivity(char username[20]);
