@@ -21,6 +21,9 @@ char* formatRupiah(int value) {
     reverse(buffer, length);
     char formatted[50];
     int j = 0;
+    formatted[j++] = 'R';
+    formatted[j++] = 'p';
+    formatted[j++] = ' ';
     for (int i = 0; i < length; i++) {
         if (i > 0 && i % 3 == 0) {
             formatted[j++] = '.';
@@ -30,6 +33,7 @@ char* formatRupiah(int value) {
     formatted[j] = '\0';
     reverse(formatted, j);
     strcat(formatted, ",00");
-    strcat(formatted, " Rp");
     return strdup(formatted);
 }
+
+
