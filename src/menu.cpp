@@ -201,7 +201,8 @@ void tampilMenuUtama(char username[20]) {
         gotoxy(1, 6);
         printf("%c Catat\n", (current_selection == 1) ? 254 : ' ');
         printf("%c Rekap\n", (current_selection == 2) ? 254 : ' ');
-        printf("%c Keluar\n", (current_selection == 3) ? 254 : ' ');
+        printf("%c dompet\n", (current_selection == 3) ? 254 : ' ');
+        printf("%c keluar\n", (current_selection == 4) ? 254 : ' ');
 
         // navigasi menu
         key = getch();
@@ -219,13 +220,16 @@ void tampilMenuUtama(char username[20]) {
                     tampilMenuRekap(username);
                     break;
                 case 3:
+                	tampilMenuDompet(username);
+                	break;
+                case 4:
                     exit(1);
                     break;
                 default:
                     break;
             }
         }
-    } while (key != 13);
+    } while (key != 14);
 }
 
 void tampilMenuCatat(char username[20]) {
@@ -315,6 +319,49 @@ void tampilMenuRekap(char username[20]) {
                     // panggil prosedur tampil rekap pengeluaran
                     break;
                 case 6:
+                    tampilMenuUtama(username);
+                    break;
+                default:
+                    break;
+            }
+        }
+    } while (key != 13);
+}
+void tampilMenuDompet(char username[20]){
+	int current_selection = 1;
+    char key;
+
+    clearScreen();
+    // print header
+    printf("MONEY TRACKING APP\n");
+    printf("User: %s\n", username);
+    printf("====================\n");
+    
+    //tampil dompet
+
+    // isi
+    do {
+        
+        printf("%c Tambah dompet\n", (current_selection == 1) ? 254 : ' ');
+        printf("%c Hapus dompet\n", (current_selection == 2) ? 254 : ' ');
+        printf("%c Kembali ke menu awal\n", (current_selection == 3) ? 254 : ' ');
+
+        // navigasi menu
+        key = getch();
+
+        if ((key == 72) && (current_selection > 1)) {
+            current_selection -= 1;
+        } else if ((key == 80) && (current_selection < 3)) {
+            current_selection += 1;
+        } else if (key == 13) {
+            switch (current_selection) {
+                case 1:
+                    // panggil prosedur tambah dompet
+                    break;
+                case 2:
+                    // panggil prosedur hapus dompet
+                    break;
+                case 3:
                     tampilMenuUtama(username);
                     break;
                 default:
