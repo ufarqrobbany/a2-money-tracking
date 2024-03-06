@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 void reverse(char str[], int length) {
@@ -34,10 +35,9 @@ char* formatRupiah(int value) {
 }
 
 int main() {
-    int amount = 123456789;
+    int amount = 100000;
     char* formattedAmount = formatRupiah(amount);
     printf("%s\n", formattedAmount);
     free(formattedAmount); // Free memory allocated by strdup
     return 0;
 }
-
