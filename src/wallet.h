@@ -9,3 +9,8 @@ struct Wallet {
 };
 
 void buatDompetAwal(char username[20]);
+
+// getSaldo
+// kurangiSaldo
+// tambahSaldo
+// tambahDompet
