@@ -13,4 +13,6 @@ void buatDompetAwal(char username[20]);
 // getSaldo
 // kurangiSaldo
 // tambahSaldo
+// getDompet
+void getDompet(char *namaFile);
 // tambahDompet
