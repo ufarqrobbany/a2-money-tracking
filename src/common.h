@@ -9,3 +9,4 @@ void gotoxy(int x, int y);
 void clearScreen();
 void reverse(char str[], int length);
 char* formatRupiah(int value);
+char* formatUang(char *uang);
