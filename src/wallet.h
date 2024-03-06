@@ -11,8 +11,11 @@ struct Wallet {
 void buatDompetAwal(char username[20]);
 
 // getSaldo
+int getSaldoDompet(char username[20], int id_dompet);
+// getTotalSaldo
+int getTotalSaldo(char username[20]);
 // kurangiSaldo
 // tambahSaldo
-// getDompet
-void getDompet(char *namaFile);
+// showDompet
+void showDompet(char username[20]);
 // tambahDompet
