@@ -230,7 +230,7 @@ void tampilMenuUtama(char username[20]) {
                     break;
             }
         }
-    } while (key != 14);
+    } while (key != 13);
 }
 
 void tampilMenuCatat(char username[20]) {
@@ -330,7 +330,7 @@ void tampilMenuRekap(char username[20]) {
 }
 
 void tampilMenuDompet(char username[20]) {
-    int current_selection = 1;
+    int current_selection = 1, jmlDompet = 0;
     char key;
 
     clearScreen();
@@ -340,10 +340,12 @@ void tampilMenuDompet(char username[20]) {
     printf("====================\n");
 
     // tampil dompet
+    jmlDompet = getDompet(username);
+    printf("====================\n");
 
     // isi
     do {
-        gotoxy(1, 4);
+        gotoxy(1, 4 + jmlDompet + 2);
         printf("%c Tambah dompet\n", (current_selection == 1) ? 254 : ' ');
         printf("%c Hapus dompet\n", (current_selection == 2) ? 254 : ' ');
         printf("%c Kembali\n", (current_selection == 3) ? 254 : ' ');
@@ -359,9 +361,23 @@ void tampilMenuDompet(char username[20]) {
             switch (current_selection) {
                 case 1:
                     // panggil prosedur tambah dompet
+                    if (jmlDompet < 1) {
+                        // tampilMenuTambahDompet(username);
+                    } else {
+                        gotoxy(1, 9 + jmlDompet);
+                        printf("Tidak bisa menambah dompet, maksimal 10 dompet dalam 1 akun");
+                        key = 0;
+                    }
                     break;
                 case 2:
                     // panggil prosedur hapus dompet
+                    if (jmlDompet > 1) {
+                        // tampilMenuHapusDompet(username);
+                    } else {
+                        gotoxy(1, 9 + jmlDompet);
+                        printf("Tidak bisa menghapus dompet lagi, sisakan 1 dompet di akunmu");
+                        key = 0;
+                    }
                     break;
                 case 3:
                     tampilMenuUtama(username);
