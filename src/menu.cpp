@@ -194,8 +194,9 @@ void tampilMenuUtama(char username[20]) {
     printf("MONEY TRACKING APP\n");
     printf("User: %s\n", username);
     printf("====================\n");
-    printf("Total Saldo: %s\n", formatRupiah(getTotalSaldo(username)));
-    printf("Pengeluaran Bulan Ini: \n");
+    printf("Total Saldo: ");
+    formatRupiah(getTotalSaldo(username));
+    printf("\nPengeluaran Bulan Ini: \n");
 
     // isi
     do {
@@ -340,7 +341,7 @@ void tampilMenuDompet(char username[20]) {
     printf("====================\n");
 
     // tampil dompet
-    jmlDompet = getDompet(username);
+    jmlDompet = getDompet(username, true);
     printf("====================\n");
 
     // isi
@@ -360,9 +361,8 @@ void tampilMenuDompet(char username[20]) {
         } else if (key == 13) {
             switch (current_selection) {
                 case 1:
-                    // panggil prosedur tambah dompet
-                    if (jmlDompet < 1) {
-                        // tampilMenuTambahDompet(username);
+                    if (jmlDompet < 10) {
+                        tampilMenuTambahDompet(username);
                     } else {
                         gotoxy(1, 9 + jmlDompet);
                         printf("Tidak bisa menambah dompet, maksimal 10 dompet dalam 1 akun");
@@ -387,4 +387,76 @@ void tampilMenuDompet(char username[20]) {
             }
         }
     } while (key != 13);
+}
+
+void tampilMenuTambahDompet(char username[20]) {
+    char namadompet[21], key, jmlDompet, saldoawal[20];
+    int n = 0, p = 1, status = 1, saldo;
+
+    do {
+        clearScreen();
+        // print header
+        printf("MONEY TRACKING APP\n");
+        printf("Login\n");
+        printf("====================\n");
+
+        // tampil dompet
+        jmlDompet = getDompet(username, true);
+        printf("====================\n");
+
+        printf("Nama Dompet\t: \n");
+        printf("Saldo Awal\t: \n");
+        gotoxy(19, 4 + jmlDompet + 2);
+
+        do {
+            key = getch();
+
+            if (((key >= 'a' && key <= 'z') || (key >= 'A' && key <= 'Z') || (key >= '0' && key <= '9') || (key == ' ')) && (n < 20)) {
+                if (p == 1) {
+                    namadompet[n] = key;
+                    n++;
+                    printf("%c", key);
+                    gotoxy(19 + n, 5 + p + jmlDompet);
+                } else if ((p == 2) && (key >= '0' && key <= '9')) {
+                    saldoawal[n] = key;
+                    n++;
+                    printf("%c", key);
+                    gotoxy(19 + n, 5 + p + jmlDompet);
+                }
+            } else if (key == 13) {  // Enter key
+                if (n > 0) {
+                    if (p == 1) {
+                        namadompet[n] = '\0';
+                        p = 2;
+                        n = 0;
+                        gotoxy(19 + n, 5 + p + jmlDompet);
+                    } else {
+                        saldoawal[n] = '\0';
+                        sscanf(saldoawal, "%d", &saldo);
+                        p = 1;
+                        n = 0;
+                        break;
+                    }
+                }
+            } else if (key == 8) {  // Backspace key
+                if (n > 0) {
+                    printf("\b \b");
+                    n--;
+                }
+            }
+        } while (key != 27);  // ESC key
+
+        if (key == 13) {
+            status = tambahDompet(username, namadompet, saldo);
+            getch();
+        }
+    } while (status == 1 && key != 27);
+
+    if (status == 0) {
+        tampilMenuDompet(username);
+    }
+
+    if (key == 27) {
+        tampilMenuDompet(username);
+    }
 }

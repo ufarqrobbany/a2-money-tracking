@@ -20,7 +20,7 @@ void buatDompetAwal(char username[20]) {
     fclose(file);
 }
 
-int getDompet(char username[20]) {
+int getDompet(char username[20], bool display) {
     char file_name[50];
     sprintf(file_name, "data\\wallets\\wallet_%s.dat", username);
 
@@ -28,14 +28,20 @@ int getDompet(char username[20]) {
 
     FILE *file = fopen(file_name, "rb");
     if (file == NULL) {
-        printf("Gagal membuka file\n");
+        printf("\nGagal membuka file\n");
         return 0;
     }
 
-    printf("Daftar Dompet:\n");
+    if (display) {
+        printf("Daftar Dompet:\n");
+    }
     struct Wallet wallet;
     while (fread(&wallet, sizeof(struct Wallet), 1, file) == 1) {
-        printf("- %s, %s\n", wallet.nama_dompet, formatRupiah(wallet.saldo));
+        if (display) {
+            printf("- %s, ", wallet.nama_dompet);
+            formatRupiah(wallet.saldo);
+            printf("\n");
+        }
         n++;
     }
 
@@ -50,7 +56,7 @@ int getSaldoDompet(char username[20], int id_dompet) {
 
     FILE *file = fopen(file_name, "rb");
     if (file == NULL) {
-        printf("Gagal membuka file Username\n");
+        printf("\nGagal membuka file Username\n");
         return -1;
     }
 
@@ -63,7 +69,7 @@ int getSaldoDompet(char username[20], int id_dompet) {
     }
 
     fclose(file);
-    printf("Dompet dengan ID '%d' tidak ditemukan\n", id_dompet);
+    printf("\nDompet dengan ID '%d' tidak ditemukan\n", id_dompet);
     return -1;
 }
 
@@ -73,7 +79,7 @@ int getTotalSaldo(char username[20]) {
 
     FILE *file = fopen(file_name, "rb");
     if (file == NULL) {
-        printf("Gagal membuka file Username\n");
+        printf("\nGagal membuka file Username\n");
         return -1;
     }
 
@@ -85,4 +91,38 @@ int getTotalSaldo(char username[20]) {
 
     fclose(file);
     return totalSaldo;
+}
+
+int tambahDompet(char username[20], char nama_dompet[20], int saldo_awal) {
+    FILE *file;
+    char file_name[50];
+    Wallet dompet, rDompet;
+    bool dompetNameExists = false;
+
+    dompet.id = getDompet(username, false) + 1;
+    strcpy(dompet.nama_dompet, nama_dompet);
+    dompet.saldo = saldo_awal;
+
+    sprintf(file_name, "data\\wallets\\wallet_%s.dat", username);
+    file = fopen(file_name, "ab+");
+
+    while (fread(&rDompet, sizeof(struct Wallet), 1, file) == 1) {
+        if (strcmp(rDompet.nama_dompet, dompet.nama_dompet) == 0) {
+            dompetNameExists = true;
+            printf("\nNama dompet sudah ada\n");
+            fclose(file);
+            return 1;
+        }
+    }
+
+    if (!dompetNameExists) {
+        fseek(file, 0, SEEK_END);
+        fwrite(&dompet, sizeof(struct Wallet), 1, file);
+        printf("\nBerhasil menambah dompet baru\n");
+        fclose(file);
+        return 0;
+    }
+
+    fclose(file);
+    return 1;
 }

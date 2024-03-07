@@ -11,7 +11,7 @@ void clearScreen() {
     system("cls");
 }
 
-char* formatRupiah(int uang) {
+void formatRupiah(int uang) {
     char str[20];
     // Using snprintf to convert integer to string
     snprintf(str, sizeof(str), "%d", uang);
@@ -28,14 +28,17 @@ char* formatRupiah(int uang) {
         len++;
     }
 
-    // Add "Rp " and ",00" to the formatted string
-    char* formatted = (char*)malloc(strlen(str) + 6);  // Allocate memory for the formatted string
-    if (formatted == NULL) {
-        printf("Memory allocation failed\n");
-        exit(1);  // Exit the program if memory allocation fails
-    }
-    strcpy(formatted, "Rp");  // Add "Rp "
-    strcat(formatted, str);   // Concatenate the formatted string
 
-    return formatted;
+    // Replace characters that are not digits, separators, or currency symbol with a space
+    for (i = 0; i < len; i++) {
+        if (!(isdigit(str[i]) || str[i] == '.' || str[i] == 'R' || str[i] == 'p')) {
+            str[i] = ' ';
+        }
+    }
+
+    // Null-terminate the string
+    str[len] = '\0';
+
+    // Print the formatted string directly
+    printf("Rp%s", str);
 }
