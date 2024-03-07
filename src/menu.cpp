@@ -2,6 +2,7 @@
 
 #include "account.h"
 #include "common.h"
+#include "wallet.h"
 
 void tampilMenuAwal() {
     int current_selection = 1;
@@ -193,7 +194,7 @@ void tampilMenuUtama(char username[20]) {
     printf("MONEY TRACKING APP\n");
     printf("User: %s\n", username);
     printf("====================\n");
-    printf("Saldo: \n");
+    printf("Total Saldo: %s\n", formatRupiah(getTotalSaldo(username)));
     printf("Pengeluaran Bulan Ini: \n");
 
     // isi
@@ -201,7 +202,7 @@ void tampilMenuUtama(char username[20]) {
         gotoxy(1, 6);
         printf("%c Catat\n", (current_selection == 1) ? 254 : ' ');
         printf("%c Rekap\n", (current_selection == 2) ? 254 : ' ');
-        printf("%c dompet\n", (current_selection == 3) ? 254 : ' ');
+        printf("%c Dompet\n", (current_selection == 3) ? 254 : ' ');
         printf("%c keluar\n", (current_selection == 4) ? 254 : ' ');
 
         // navigasi menu
@@ -209,7 +210,7 @@ void tampilMenuUtama(char username[20]) {
 
         if ((key == 72) && (current_selection > 1)) {
             current_selection -= 1;
-        } else if ((key == 80) && (current_selection < 3)) {
+        } else if ((key == 80) && (current_selection < 4)) {
             current_selection += 1;
         } else if (key == 13) {
             switch (current_selection) {
@@ -220,8 +221,8 @@ void tampilMenuUtama(char username[20]) {
                     tampilMenuRekap(username);
                     break;
                 case 3:
-                	tampilMenuDompet(username);
-                	break;
+                    tampilMenuDompet(username);
+                    break;
                 case 4:
                     exit(1);
                     break;
@@ -327,14 +328,9 @@ void tampilMenuRekap(char username[20]) {
         }
     } while (key != 13);
 }
-<<<<<<< Updated upstream
-void tampilMenuDompet(char username[20]){
-	int current_selection = 1;
-=======
 
 void tampilMenuDompet(char username[20]) {
     int current_selection = 1;
->>>>>>> Stashed changes
     char key;
 
     clearScreen();
@@ -342,16 +338,12 @@ void tampilMenuDompet(char username[20]) {
     printf("MONEY TRACKING APP\n");
     printf("User: %s\n", username);
     printf("====================\n");
-    
-    //tampil dompet
+
+    // tampil dompet
 
     // isi
     do {
-<<<<<<< Updated upstream
-        
-=======
         gotoxy(1, 4);
->>>>>>> Stashed changes
         printf("%c Tambah dompet\n", (current_selection == 1) ? 254 : ' ');
         printf("%c Hapus dompet\n", (current_selection == 2) ? 254 : ' ');
         printf("%c Kembali\n", (current_selection == 3) ? 254 : ' ');
