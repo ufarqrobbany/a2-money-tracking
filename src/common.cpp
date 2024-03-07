@@ -11,11 +11,11 @@ void clearScreen() {
     system("cls");
 }
 
-char* formatUang(int uang) {
-	char str[20];
-	// Using snprintf to convert integer to string
+char* formatRupiah(int uang) {
+    char str[20];
+    // Using snprintf to convert integer to string
     snprintf(str, sizeof(str), "%d", uang);
-	
+
     int len = strlen(str);
     int i, j;
 
@@ -29,15 +29,14 @@ char* formatUang(int uang) {
     }
 
     // Add "Rp " and ",00" to the formatted string
-    char* formatted = (char*)malloc(strlen(str) + 6); // Allocate memory for the formatted string
+    char* formatted = (char*)malloc(strlen(str) + 6);  // Allocate memory for the formatted string
     if (formatted == NULL) {
         printf("Memory allocation failed\n");
-        exit(1); // Exit the program if memory allocation fails
+        exit(1);  // Exit the program if memory allocation fails
     }
-    strcpy(formatted, "Rp "); // Add "Rp "
-    strcat(formatted, str); // Concatenate the formatted string
-    strcat(formatted, ",00"); // Add ",00"
+    strcpy(formatted, "Rp ");  // Add "Rp "
+    strcat(formatted, str);    // Concatenate the formatted string
+    strcat(formatted, ",00");  // Add ",00"
 
     return formatted;
 }
-
