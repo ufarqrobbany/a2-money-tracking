@@ -9,11 +9,6 @@ int login(char username[20], char password[20]) {
     bool usernameExists = false;
     bool passwordValid = false;
 
-    if (file == NULL) {
-        printf("\nGagal membuka file.\n");
-        return 1;
-    }
-
     while (fread(&akun, sizeof(struct Account), 1, file) == 1) {
         if (strcmp(akun.username, username) == 0) {
             usernameExists = true;
@@ -48,11 +43,6 @@ int daftar(char nama[20], char username[20], char password[20], char re_password
     }
 
     FILE *file = fopen("data\\akun.dat", "ab+");
-
-    if (file == NULL) {
-        printf("\nGagal membuka file.\n");
-        return 1;
-    }
 
     struct Account akun;
     bool usernameExists = false;
