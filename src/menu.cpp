@@ -511,6 +511,7 @@ void tampilMenuHapusDompet(char username[20]) {
             do {
                 current_selection += 1;
             } while (isIdInKosong(current_selection, idKosong, kosong) && (current_selection < getLastIDDompet(username)));
+
             current_selection = (current_selection > getLastIDDompet(username)) ? getLastIDDompet(username) : current_selection;  // Ensure it doesn't exceed last ID
         } else if (key == 13) {
             fclose(file);
