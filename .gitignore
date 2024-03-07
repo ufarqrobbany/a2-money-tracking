@@ -1,4 +1,5 @@
 .vscode
 *.json
+*.dat
 *.exe
 build
