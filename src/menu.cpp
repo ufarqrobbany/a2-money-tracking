@@ -194,14 +194,9 @@ void tampilMenuUtama(char username[20]) {
     printf("MONEY TRACKING APP\n");
     printf("User: %s\n", username);
     printf("====================\n");
-<<<<<<< HEAD
     printf("Total Saldo: ");
     formatRupiah(getTotalSaldo(username));
     printf("\nPengeluaran Bulan Ini: \n");
-=======
-    printf("Total Saldo: %s\n", formatRupiah(getTotalSaldo(username)));
-    printf("Pengeluaran Bulan Ini: \n");
->>>>>>> a63855bc2837ff11ce0946f82ad3e64b233a7955
 
     // isi
     do {
@@ -209,11 +204,8 @@ void tampilMenuUtama(char username[20]) {
         printf("%c Catat\n", (current_selection == 1) ? 254 : ' ');
         printf("%c Rekap\n", (current_selection == 2) ? 254 : ' ');
         printf("%c Dompet\n", (current_selection == 3) ? 254 : ' ');
-<<<<<<< HEAD
         printf("\n%c Keluar\n", (current_selection == 4) ? 254 : ' ');
-=======
-        printf("%c keluar\n", (current_selection == 4) ? 254 : ' ');
->>>>>>> a63855bc2837ff11ce0946f82ad3e64b233a7955
+
 
         // navigasi menu
         key = getch();
@@ -258,11 +250,7 @@ void tampilMenuCatat(char username[20]) {
         gotoxy(1, 4);
         printf("%c Catat Pengeluaran\n", (current_selection == 1) ? 254 : ' ');
         printf("%c Catat Pemasukan\n", (current_selection == 2) ? 254 : ' ');
-<<<<<<< HEAD
         printf("\n%c Kembali\n", (current_selection == 3) ? 254 : ' ');
-=======
-        printf("%c Kembali\n", (current_selection == 3) ? 254 : ' ');
->>>>>>> a63855bc2837ff11ce0946f82ad3e64b233a7955
 
         // navigasi menu
         key = getch();
@@ -307,11 +295,7 @@ void tampilMenuRekap(char username[20]) {
         printf("%c Tampil Rekap Bulanan\n", (current_selection == 3) ? 254 : ' ');
         printf("%c Tampil Semua Pemasukan\n", (current_selection == 4) ? 254 : ' ');
         printf("%c Tampil Semua Pengeluaran\n", (current_selection == 5) ? 254 : ' ');
-<<<<<<< HEAD
         printf("\n%c Kembali\n", (current_selection == 6) ? 254 : ' ');
-=======
-        printf("%c Kembali\n", (current_selection == 6) ? 254 : ' ');
->>>>>>> a63855bc2837ff11ce0946f82ad3e64b233a7955
 
         // navigasi menu
         key = getch();
@@ -348,11 +332,7 @@ void tampilMenuRekap(char username[20]) {
 }
 
 void tampilMenuDompet(char username[20]) {
-<<<<<<< HEAD
     int current_selection = 1, jmlDompet = 0;
-=======
-    int current_selection = 1;
->>>>>>> a63855bc2837ff11ce0946f82ad3e64b233a7955
     char key;
 
     clearScreen();
@@ -362,7 +342,6 @@ void tampilMenuDompet(char username[20]) {
     printf("====================\n");
 
     // tampil dompet
-<<<<<<< HEAD
     jmlDompet = getDompet(username, true);
     printf("====================\n");
 
@@ -373,15 +352,6 @@ void tampilMenuDompet(char username[20]) {
         printf("%c Ubah Nama Dompet\n", (current_selection == 2) ? 254 : ' ');
         printf("%c Hapus Dompet\n", (current_selection == 3) ? 254 : ' ');
         printf("\n%c Kembali\n", (current_selection == 4) ? 254 : ' ');
-=======
-
-    // isi
-    do {
-        gotoxy(1, 4);
-        printf("%c Tambah dompet\n", (current_selection == 1) ? 254 : ' ');
-        printf("%c Hapus dompet\n", (current_selection == 2) ? 254 : ' ');
-        printf("%c Kembali\n", (current_selection == 3) ? 254 : ' ');
->>>>>>> a63855bc2837ff11ce0946f82ad3e64b233a7955
 
         // navigasi menu
         key = getch();
@@ -424,7 +394,6 @@ void tampilMenuDompet(char username[20]) {
             }
         }
     } while (key != 13);
-<<<<<<< HEAD
 }
 
 void tampilMenuTambahDompet(char username[20]) {
@@ -617,7 +586,6 @@ void tampilMenuHapusDompet(char username[20]) {
                 }
             }
         }
-
         printf("\n%c Kembali", (current_selection == getLastIDDompet(username) + 1) ? 254 : ' ');
 
         // navigasi menu
@@ -884,6 +852,4 @@ void tampilMenuInputNamaDompet(char username[20], int id_dompet) {
         tampilMenuDompet(username);
     }
 }
-=======
-}
->>>>>>> a63855bc2837ff11ce0946f82ad3e64b233a7955
+

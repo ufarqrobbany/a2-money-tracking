@@ -1,10 +1,6 @@
 #include "wallet.h"
 
-<<<<<<< HEAD
 #include "common.h"
-=======
-#include "account.h"
->>>>>>> a63855bc2837ff11ce0946f82ad3e64b233a7955
 
 // Buat dompet awal/default
 void buatDompetAwal(char username[20]) {
@@ -27,11 +23,8 @@ void buatDompetAwal(char username[20]) {
 int getDompet(char username[20], bool display) {
     char file_name[50];
     sprintf(file_name, "data\\wallets\\wallet_%s.dat", username);
-<<<<<<< HEAD
 
     int n = 0;
-=======
->>>>>>> a63855bc2837ff11ce0946f82ad3e64b233a7955
 
     FILE *file = fopen(file_name, "rb");
     if (file == NULL) {
