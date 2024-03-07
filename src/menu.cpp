@@ -361,7 +361,6 @@ void tampilMenuDompet(char username[20]) {
         } else if (key == 13) {
             switch (current_selection) {
                 case 1:
-                    // panggil prosedur tambah dompet
                     if (jmlDompet < 10) {
                         tampilMenuTambahDompet(username);
                     } else {
@@ -373,7 +372,7 @@ void tampilMenuDompet(char username[20]) {
                 case 2:
                     // panggil prosedur hapus dompet
                     if (jmlDompet > 1) {
-                        // tampilMenuHapusDompet(username);
+                        tampilMenuHapusDompet(username);
                     } else {
                         gotoxy(1, 9 + jmlDompet);
                         printf("Tidak bisa menghapus dompet lagi, sisakan 1 dompet di akunmu");
@@ -458,6 +457,108 @@ void tampilMenuTambahDompet(char username[20]) {
     }
 
     if (key == 27) {
+        tampilMenuDompet(username);
+    }
+}
+
+void tampilMenuHapusDompet(char username[20]) {
+    int current_selection = 1, jmlDompet = 0;
+    char key;
+
+    clearScreen();
+    // print header
+    printf("MONEY TRACKING APP\n");
+    printf("User: %s\n", username);
+    printf("====================\n");
+    printf("Pilih dompet yang akan dihapus\n");
+
+    // hitung dompet
+    jmlDompet = getDompet(username, false);
+
+    Wallet dom;
+    char file_name[50];
+    sprintf(file_name, "data\\wallets\\wallet_%s.dat", username);
+
+    FILE *file = fopen(file_name, "rb");
+
+    // isi
+    do {
+        int idKosong[100] = {}, kosong = 0;
+        gotoxy(1, 5);
+        while (fread(&dom, sizeof(struct Wallet), 1, file) == 1) {
+            if (strcmp(dom.nama_dompet, "") != 0) {
+                printf("%c %s, ", (current_selection == dom.id) ? 254 : ' ', dom.nama_dompet);
+                formatRupiah(dom.saldo);
+                printf("\n");
+            } else {
+                idKosong[kosong] = dom.id;
+                kosong++;
+            }
+        }
+
+        // navigasi menu
+        key = getch();
+
+        // Pindahkan posisi ke awal file
+        fseek(file, 0, SEEK_SET);
+
+        if ((key == 72) && (current_selection > 1)) {
+            do {
+                current_selection -= 1;
+            } while (isIdInKosong(current_selection, idKosong, kosong) && (current_selection > 1));
+            current_selection = (current_selection < 1) ? 1 : current_selection;  // Ensure it doesn't go below 1
+        } else if ((key == 80) && (current_selection < getLastIDDompet(username))) {
+            do {
+                current_selection += 1;
+            } while (isIdInKosong(current_selection, idKosong, kosong) && (current_selection < getLastIDDompet(username)));
+            current_selection = (current_selection > getLastIDDompet(username)) ? getLastIDDompet(username) : current_selection;  // Ensure it doesn't exceed last ID
+        } else if (key == 13) {
+            fclose(file);
+            tampilKonfirmasiHapusDompet(username, getNamaDompet(username, current_selection), current_selection);
+        }
+    } while (key != 13);
+    fclose(file);
+}
+
+void tampilKonfirmasiHapusDompet(char username[20], char namadompet[20], int iddompet) {
+    int current_selection = 1, status = 1;
+    char key;
+
+    clearScreen();
+    // print header
+    printf("MONEY TRACKING APP\n");
+    printf("User: %s\n", username);
+    printf("====================\n");
+    printf("Yakin ingin menghapus dompet \"%s\"? Semua riwayat aktivitas pada dompet ini akan terhapus", namadompet);
+
+    // isi
+    do {
+        gotoxy(1, 5);
+        printf("%c Tidak, kembali\n", (current_selection == 1) ? 254 : ' ');
+        printf("%c Yakin, hapus\n", (current_selection == 2) ? 254 : ' ');
+
+        // navigasi menu
+        key = getch();
+
+        if ((key == 72) && (current_selection > 1)) {
+            current_selection -= 1;
+        } else if ((key == 80) && (current_selection < 2)) {
+            current_selection += 1;
+        } else if (key == 13) {
+            switch (current_selection) {
+                case 1:
+                    // hapus dompet
+                    tampilMenuDompet(username);
+                    break;
+                default:
+                    status = hapusDompet(username, iddompet);
+                    getch();
+                    break;
+            }
+        }
+    } while (key != 13);
+
+    if (status == 0) {
         tampilMenuDompet(username);
     }
 }
