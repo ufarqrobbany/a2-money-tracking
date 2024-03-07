@@ -18,7 +18,7 @@ void tampilMenuAwal() {
         gotoxy(1, 3);
         printf("%c Masuk\n", (current_selection == 1) ? 254 : ' ');
         printf("%c Daftar\n", (current_selection == 2) ? 254 : ' ');
-        printf("%c Keluar\n", (current_selection == 3) ? 254 : ' ');
+        printf("\n%c Keluar\n", (current_selection == 3) ? 254 : ' ');
 
         // navigasi menu
         key = getch();
@@ -204,7 +204,7 @@ void tampilMenuUtama(char username[20]) {
         printf("%c Catat\n", (current_selection == 1) ? 254 : ' ');
         printf("%c Rekap\n", (current_selection == 2) ? 254 : ' ');
         printf("%c Dompet\n", (current_selection == 3) ? 254 : ' ');
-        printf("%c keluar\n", (current_selection == 4) ? 254 : ' ');
+        printf("\n%c Keluar\n", (current_selection == 4) ? 254 : ' ');
 
         // navigasi menu
         key = getch();
@@ -249,7 +249,7 @@ void tampilMenuCatat(char username[20]) {
         gotoxy(1, 4);
         printf("%c Catat Pengeluaran\n", (current_selection == 1) ? 254 : ' ');
         printf("%c Catat Pemasukan\n", (current_selection == 2) ? 254 : ' ');
-        printf("%c Kembali\n", (current_selection == 3) ? 254 : ' ');
+        printf("\n%c Kembali\n", (current_selection == 3) ? 254 : ' ');
 
         // navigasi menu
         key = getch();
@@ -294,7 +294,7 @@ void tampilMenuRekap(char username[20]) {
         printf("%c Tampil Rekap Bulanan\n", (current_selection == 3) ? 254 : ' ');
         printf("%c Tampil Semua Pemasukan\n", (current_selection == 4) ? 254 : ' ');
         printf("%c Tampil Semua Pengeluaran\n", (current_selection == 5) ? 254 : ' ');
-        printf("%c Kembali\n", (current_selection == 6) ? 254 : ' ');
+        printf("\n%c Kembali\n", (current_selection == 6) ? 254 : ' ');
 
         // navigasi menu
         key = getch();
@@ -349,7 +349,7 @@ void tampilMenuDompet(char username[20]) {
         gotoxy(1, 4 + jmlDompet + 2);
         printf("%c Tambah dompet\n", (current_selection == 1) ? 254 : ' ');
         printf("%c Hapus dompet\n", (current_selection == 2) ? 254 : ' ');
-        printf("%c Kembali\n", (current_selection == 3) ? 254 : ' ');
+        printf("\n%c Kembali\n", (current_selection == 3) ? 254 : ' ');
 
         // navigasi menu
         key = getch();
@@ -495,6 +495,7 @@ void tampilMenuHapusDompet(char username[20]) {
                 kosong++;
             }
         }
+        printf("\n%c Kembali", (current_selection == dom.id + 1) ? 254 : ' ');
 
         // navigasi menu
         key = getch();
@@ -506,16 +507,19 @@ void tampilMenuHapusDompet(char username[20]) {
             do {
                 current_selection -= 1;
             } while (isIdInKosong(current_selection, idKosong, kosong) && (current_selection > 1));
-            current_selection = (current_selection < 1) ? 1 : current_selection;  // Ensure it doesn't go below 1
-        } else if ((key == 80) && (current_selection < getLastIDDompet(username))) {
+            current_selection = (current_selection < 1) ? 1 : current_selection;
+        } else if ((key == 80) && (current_selection < getLastIDDompet(username) + 1)) {
             do {
                 current_selection += 1;
-            } while (isIdInKosong(current_selection, idKosong, kosong) && (current_selection < getLastIDDompet(username)));
-
-            current_selection = (current_selection > getLastIDDompet(username)) ? getLastIDDompet(username) : current_selection;  // Ensure it doesn't exceed last ID
+            } while (isIdInKosong(current_selection, idKosong, kosong) && (current_selection < getLastIDDompet(username) + 1));
+            current_selection = (current_selection > getLastIDDompet(username) + 1) ? getLastIDDompet(username) + 1 : current_selection;
         } else if (key == 13) {
             fclose(file);
-            tampilKonfirmasiHapusDompet(username, getNamaDompet(username, current_selection), current_selection);
+            if (current_selection == getLastIDDompet(username) + 1) {
+                tampilMenuDompet(username);
+            } else {
+                tampilKonfirmasiHapusDompet(username, getNamaDompet(username, current_selection), current_selection);
+            }
         }
     } while (key != 13);
     fclose(file);
