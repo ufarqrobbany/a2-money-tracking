@@ -17,6 +17,7 @@ int getSaldoDompet(char username[20], int id_dompet);
 int getTotalSaldo(char username[20]);
 // kurangiSaldo
 int getLastIDDompet(char username[20]);
+int getFirstNonEmptyID(int idKosong[], int kosong, int lastID);
 int getDompet(char username[20], bool display);
 int tambahDompet(char username[20], char nama_dompet[20], int saldo_awal);
 int hapusDompet(char username[20], int id_dompet);

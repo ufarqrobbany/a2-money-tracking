@@ -206,6 +206,7 @@ void tampilMenuUtama(char username[20]) {
         printf("%c Dompet\n", (current_selection == 3) ? 254 : ' ');
         printf("\n%c Keluar\n", (current_selection == 4) ? 254 : ' ');
 
+
         // navigasi menu
         key = getch();
 
@@ -366,7 +367,7 @@ void tampilMenuDompet(char username[20]) {
                     if (jmlDompet < 10) {
                         tampilMenuTambahDompet(username);
                     } else {
-                        gotoxy(1, 9 + jmlDompet);
+                        gotoxy(1, 12 + jmlDompet);
                         printf("Tidak bisa menambah dompet, maksimal 10 dompet dalam 1 akun");
                         key = 0;
                     }
@@ -380,7 +381,7 @@ void tampilMenuDompet(char username[20]) {
                     if (jmlDompet > 1) {
                         tampilMenuHapusDompet(username);
                     } else {
-                        gotoxy(1, 9 + jmlDompet);
+                        gotoxy(1, 12 + jmlDompet);
                         printf("Tidak bisa menghapus dompet lagi, sisakan 1 dompet di akunmu");
                         key = 0;
                     }
@@ -397,7 +398,7 @@ void tampilMenuDompet(char username[20]) {
 
 void tampilMenuTambahDompet(char username[20]) {
     char namadompet[21], key, jmlDompet, saldoawal[20];
-    int n = 0, p = 1, status = 1, saldo;
+    int n = 0, p = 1, status = 1, saldo = 0;
 
     do {
         clearScreen();
@@ -411,7 +412,9 @@ void tampilMenuTambahDompet(char username[20]) {
         printf("====================\n");
 
         printf("Nama Dompet\t: \n");
-        printf("Saldo Awal\t: \n");
+        printf("Saldo Awal\t: ");
+        formatRupiah(saldo);
+        printf("\n");
         gotoxy(19, 4 + jmlDompet + 2);
 
         do {
@@ -423,19 +426,36 @@ void tampilMenuTambahDompet(char username[20]) {
                     n++;
                     printf("%c", key);
                     gotoxy(19 + n, 5 + p + jmlDompet);
-                } else if ((p == 2) && (key >= '0' && key <= '9')) {
-                    saldoawal[n] = key;
-                    n++;
-                    printf("%c", key);
-                    gotoxy(19 + n, 5 + p + jmlDompet);
+                } else if ((p == 2) && (key >= '0' && key <= '9') && (n < 9)) {
+                    if (!(n == 0 && key == '0')) {
+                        saldoawal[n] = key;
+                        n++;
+                        sscanf(saldoawal, "%d", &saldo);
+                        // gotoxy(19, 5 + p + jmlDompet);
+                        // formatRupiah(saldo);
+                        // gotoxy(19 + getLengthFormatRupiah(saldo) + 2, 5 + p + jmlDompet);
+
+                        gotoxy(19, 5 + p + jmlDompet);
+                        printf("                  ");
+                        gotoxy(19, 5 + p + jmlDompet);
+                        formatRupiah(saldo);
+                        gotoxy(19 + getLengthFormatRupiah(saldo) + 2, 5 + p + jmlDompet);
+                    }
                 }
             } else if (key == 13) {  // Enter key
+                if (n == 0 && p == 2) {
+                    saldo = 0;
+                    p = 1;
+                    n = 0;
+                    break;
+                }
+
                 if (n > 0) {
                     if (p == 1) {
                         namadompet[n] = '\0';
                         p = 2;
                         n = 0;
-                        gotoxy(19 + n, 5 + p + jmlDompet);
+                        gotoxy(19 + n + 2, 5 + p + jmlDompet);
                     } else {
                         saldoawal[n] = '\0';
                         sscanf(saldoawal, "%d", &saldo);
@@ -446,8 +466,36 @@ void tampilMenuTambahDompet(char username[20]) {
                 }
             } else if (key == 8) {  // Backspace key
                 if (n > 0) {
-                    printf("\b \b");
+                    if (p == 1) {
+                        printf("\b \b");
+                    }
                     n--;
+
+                    if (p == 2) {
+                        // // Remove the last character from saldoawal
+                        // saldoawal[n] = '\0';
+
+                        // // Move the cursor back, overwrite with a space, then move back again
+                        // gotoxy(19 + n, 5 + p + jmlDompet);
+                        // printf(" ");
+                        // gotoxy(19 + n, 5 + p + jmlDompet);
+
+                        saldoawal[n] = '\0';
+                        if (saldoawal[0] == '\0') {
+                            saldo = 0;
+                        } else {
+                            sscanf(saldoawal, "%d", &saldo);
+                        }
+                        // gotoxy(19, 5 + p + jmlDompet);
+                        // formatRupiah(saldo);
+                        // gotoxy(19 + getLengthFormatRupiah(saldo) + 2, 5 + p + jmlDompet);
+
+                        gotoxy(19, 5 + p + jmlDompet);
+                        printf("                  ");
+                        gotoxy(19, 5 + p + jmlDompet);
+                        formatRupiah(saldo);
+                        gotoxy(19 + getLengthFormatRupiah(saldo) + 2, 5 + p + jmlDompet);
+                    }
                 }
             }
         } while (key != 27);  // ESC key
@@ -469,7 +517,7 @@ void tampilMenuTambahDompet(char username[20]) {
 
 void tampilMenuHapusDompet(char username[20]) {
     int current_selection = 1, jmlDompet = 0;
-    char key;
+    char key, initiate = 1, j;
 
     clearScreen();
     // print header
@@ -491,20 +539,59 @@ void tampilMenuHapusDompet(char username[20]) {
     do {
         int idKosong[100] = {}, kosong = 0;
         gotoxy(1, 5);
+        j = 0;
+
+        // Display ASCII 254 in the first row
+        if (initiate == 1) {
+            printf("%c ", 254);
+        } else {
+            printf("  ");  // Spaces to maintain alignment for other rows
+        }
+
+        // Membaca file untuk mencari ID yang kosong
         while (fread(&dom, sizeof(struct Wallet), 1, file) == 1) {
             if (strcmp(dom.nama_dompet, "") != 0) {
-                printf("%c %s, ", (current_selection == dom.id) ? 254 : ' ', dom.nama_dompet);
+                if (j == 0) {
+                    gotoxy(1, 5);
+                }
+
+                // Check if in the first row to keep ASCII 254
+                if (j == 0 && initiate == 1) {
+                    printf("%c %s, ", 254, dom.nama_dompet);
+                } else {
+                    printf("%c %s, ", (current_selection == dom.id || initiate == 1) ? 254 : ' ', dom.nama_dompet);
+                }
+
                 formatRupiah(dom.saldo);
                 printf("\n");
+                j++;
+
+                // Update current_selection if it's initially pointing to an ID in idKosong
+                if (current_selection == dom.id && isIdInKosong(current_selection, idKosong, kosong)) {
+                    current_selection = dom.id;
+                }
+                initiate++;
             } else {
                 idKosong[kosong] = dom.id;
                 kosong++;
             }
         }
-        printf("\n%c Kembali", (current_selection == dom.id + 1) ? 254 : ' ');
+
+        // Menentukan nilai awal current_selection yang valid jika ID paling awal termasuk dalam idKosong
+        if (current_selection <= 0 || isIdInKosong(current_selection, idKosong, kosong)) {
+            for (int i = 1; i <= getLastIDDompet(username) + 1; ++i) {
+                if (!isIdInKosong(i, idKosong, kosong)) {
+                    current_selection = i;
+                    break;
+                }
+            }
+        }
+        printf("\n%c Kembali", (current_selection == getLastIDDompet(username) + 1) ? 254 : ' ');
 
         // navigasi menu
         key = getch();
+
+        initiate = 2;
 
         // Pindahkan posisi ke awal file
         fseek(file, 0, SEEK_SET);
@@ -513,11 +600,29 @@ void tampilMenuHapusDompet(char username[20]) {
             do {
                 current_selection -= 1;
             } while (isIdInKosong(current_selection, idKosong, kosong) && (current_selection > 1));
+
+            // Adjust current_selection to the first non-empty ID if necessary
+            if (isIdInKosong(current_selection, idKosong, kosong)) {
+                int firstNonEmptyID = getFirstNonEmptyID(idKosong, kosong, getLastIDDompet(username));
+                if (firstNonEmptyID > 0) {
+                    current_selection = firstNonEmptyID;
+                }
+            }
+
             current_selection = (current_selection < 1) ? 1 : current_selection;
         } else if ((key == 80) && (current_selection < getLastIDDompet(username) + 1)) {
             do {
                 current_selection += 1;
             } while (isIdInKosong(current_selection, idKosong, kosong) && (current_selection < getLastIDDompet(username) + 1));
+
+            // Adjust current_selection to the first non-empty ID if necessary
+            if (isIdInKosong(current_selection, idKosong, kosong)) {
+                int firstNonEmptyID = getFirstNonEmptyID(idKosong, kosong, getLastIDDompet(username));
+                if (firstNonEmptyID > 0) {
+                    current_selection = firstNonEmptyID;
+                }
+            }
+
             current_selection = (current_selection > getLastIDDompet(username) + 1) ? getLastIDDompet(username) + 1 : current_selection;
         } else if (key == 13) {
             fclose(file);
@@ -576,14 +681,14 @@ void tampilKonfirmasiHapusDompet(char username[20], char namadompet[20], int idd
 
 void tampilMenuUbahNamaDompet(char username[20]) {
     int current_selection = 1, jmlDompet = 0;
-    char key;
+    char key, initiate = 1, j;
 
     clearScreen();
     // print header
     printf("MONEY TRACKING APP\n");
     printf("User: %s\n", username);
     printf("====================\n");
-    printf("Pilih dompet yang akan diubah namanya\n");
+    printf("Pilih dompet yang akan dihapus\n");
 
     // hitung dompet
     jmlDompet = getDompet(username, false);
@@ -598,20 +703,60 @@ void tampilMenuUbahNamaDompet(char username[20]) {
     do {
         int idKosong[100] = {}, kosong = 0;
         gotoxy(1, 5);
+        j = 0;
+
+        // Display ASCII 254 in the first row
+        if (initiate == 1) {
+            printf("%c ", 254);
+        } else {
+            printf("  ");  // Spaces to maintain alignment for other rows
+        }
+
+        // Membaca file untuk mencari ID yang kosong
         while (fread(&dom, sizeof(struct Wallet), 1, file) == 1) {
             if (strcmp(dom.nama_dompet, "") != 0) {
-                printf("%c %s, ", (current_selection == dom.id) ? 254 : ' ', dom.nama_dompet);
+                if (j == 0) {
+                    gotoxy(1, 5);
+                }
+
+                // Check if in the first row to keep ASCII 254
+                if (j == 0 && initiate == 1) {
+                    printf("%c %s, ", 254, dom.nama_dompet);
+                } else {
+                    printf("%c %s, ", (current_selection == dom.id || initiate == 1) ? 254 : ' ', dom.nama_dompet);
+                }
+
                 formatRupiah(dom.saldo);
                 printf("\n");
+                j++;
+
+                // Update current_selection if it's initially pointing to an ID in idKosong
+                if (current_selection == dom.id && isIdInKosong(current_selection, idKosong, kosong)) {
+                    current_selection = dom.id;
+                }
+                initiate++;
             } else {
                 idKosong[kosong] = dom.id;
                 kosong++;
             }
         }
-        printf("\n%c Kembali", (current_selection == dom.id + 1) ? 254 : ' ');
+
+        // Menentukan nilai awal current_selection yang valid jika ID paling awal termasuk dalam idKosong
+        if (current_selection <= 0 || isIdInKosong(current_selection, idKosong, kosong)) {
+            for (int i = 1; i <= getLastIDDompet(username) + 1; ++i) {
+                if (!isIdInKosong(i, idKosong, kosong)) {
+                    current_selection = i;
+                    break;
+                }
+            }
+        }
+
+        printf("\n%c Kembali", (current_selection == getLastIDDompet(username) + 1) ? 254 : ' ');
 
         // navigasi menu
         key = getch();
+
+        initiate = 2;
 
         // Pindahkan posisi ke awal file
         fseek(file, 0, SEEK_SET);
@@ -620,11 +765,29 @@ void tampilMenuUbahNamaDompet(char username[20]) {
             do {
                 current_selection -= 1;
             } while (isIdInKosong(current_selection, idKosong, kosong) && (current_selection > 1));
+
+            // Adjust current_selection to the first non-empty ID if necessary
+            if (isIdInKosong(current_selection, idKosong, kosong)) {
+                int firstNonEmptyID = getFirstNonEmptyID(idKosong, kosong, getLastIDDompet(username));
+                if (firstNonEmptyID > 0) {
+                    current_selection = firstNonEmptyID;
+                }
+            }
+
             current_selection = (current_selection < 1) ? 1 : current_selection;
         } else if ((key == 80) && (current_selection < getLastIDDompet(username) + 1)) {
             do {
                 current_selection += 1;
             } while (isIdInKosong(current_selection, idKosong, kosong) && (current_selection < getLastIDDompet(username) + 1));
+
+            // Adjust current_selection to the first non-empty ID if necessary
+            if (isIdInKosong(current_selection, idKosong, kosong)) {
+                int firstNonEmptyID = getFirstNonEmptyID(idKosong, kosong, getLastIDDompet(username));
+                if (firstNonEmptyID > 0) {
+                    current_selection = firstNonEmptyID;
+                }
+            }
+
             current_selection = (current_selection > getLastIDDompet(username) + 1) ? getLastIDDompet(username) + 1 : current_selection;
         } else if (key == 13) {
             fclose(file);
@@ -689,3 +852,4 @@ void tampilMenuInputNamaDompet(char username[20], int id_dompet) {
         tampilMenuDompet(username);
     }
 }
+

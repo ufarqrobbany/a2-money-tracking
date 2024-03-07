@@ -6,6 +6,12 @@
 #include <string.h>
 #include <windows.h>
 
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+
 void gotoxy(int x, int y);
 void clearScreen();
 void formatRupiah(int uang);
+int getLengthFormatRupiah(int uang);
+

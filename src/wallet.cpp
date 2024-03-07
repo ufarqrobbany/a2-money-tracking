@@ -130,6 +130,27 @@ int getLastIDDompet(char username[20]) {
     return id;
 }
 
+int getFirstNonEmptyID(int idKosong[], int kosong, int lastID) {
+    int i, j;
+
+    for (i = 1; i <= lastID; ++i) {
+        int found = 0;
+
+        for (j = 0; j < kosong; ++j) {
+            if (i == idKosong[j]) {
+                found = 1;
+                break;
+            }
+        }
+
+        if (!found) {
+            return i;
+        }
+    }
+
+    return 0;
+}
+
 int getTotalSaldo(char username[20]) {
     char file_name[50];
     sprintf(file_name, "data\\wallets\\wallet_%s.dat", username);
@@ -264,7 +285,7 @@ int ubahNamaDompet(char username[20], int id_dompet, char namabaru[20]) {
     while (fread(&rDompet, sizeof(struct Wallet), 1, file) == 1) {
         if (rDompet.id == id_dompet) {
             dompetFound = true;
-            printf("\nDompet %s berhasil diubah nama menjadi %s\n", namalama, namabaru);
+            printf("\nDompet \"%s\" berhasil diubah nama menjadi \"%s\"\n", namalama, namabaru);
 
             // Menggeser posisi file untuk menimpa data dompet yang akan diubah namanya
             long position = ftell(file) - sizeof(struct Wallet);
