@@ -12,5 +12,9 @@
 
 void gotoxy(int x, int y);
 void clearScreen();
+<<<<<<< HEAD
 void formatRupiah(int uang);
 int getLengthFormatRupiah(int uang);
+=======
+char* formatRupiah(int uang);
+>>>>>>> a63855bc2837ff11ce0946f82ad3e64b233a7955
