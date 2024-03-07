@@ -247,7 +247,7 @@ void tampilMenuCatat(char username[20]) {
         gotoxy(1, 4);
         printf("%c Catat Pengeluaran\n", (current_selection == 1) ? 254 : ' ');
         printf("%c Catat Pemasukan\n", (current_selection == 2) ? 254 : ' ');
-        printf("%c Kembali ke menu awal\n", (current_selection == 3) ? 254 : ' ');
+        printf("%c Kembali\n", (current_selection == 3) ? 254 : ' ');
 
         // navigasi menu
         key = getch();
@@ -292,7 +292,7 @@ void tampilMenuRekap(char username[20]) {
         printf("%c Tampil Rekap Bulanan\n", (current_selection == 3) ? 254 : ' ');
         printf("%c Tampil Semua Pemasukan\n", (current_selection == 4) ? 254 : ' ');
         printf("%c Tampil Semua Pengeluaran\n", (current_selection == 5) ? 254 : ' ');
-        printf("%c Kembali ke menu awal\n", (current_selection == 6) ? 254 : ' ');
+        printf("%c Kembali\n", (current_selection == 6) ? 254 : ' ');
 
         // navigasi menu
         key = getch();
@@ -327,8 +327,14 @@ void tampilMenuRekap(char username[20]) {
         }
     } while (key != 13);
 }
+<<<<<<< Updated upstream
 void tampilMenuDompet(char username[20]){
 	int current_selection = 1;
+=======
+
+void tampilMenuDompet(char username[20]) {
+    int current_selection = 1;
+>>>>>>> Stashed changes
     char key;
 
     clearScreen();
@@ -341,10 +347,14 @@ void tampilMenuDompet(char username[20]){
 
     // isi
     do {
+<<<<<<< Updated upstream
         
+=======
+        gotoxy(1, 4);
+>>>>>>> Stashed changes
         printf("%c Tambah dompet\n", (current_selection == 1) ? 254 : ' ');
         printf("%c Hapus dompet\n", (current_selection == 2) ? 254 : ' ');
-        printf("%c Kembali ke menu awal\n", (current_selection == 3) ? 254 : ' ');
+        printf("%c Kembali\n", (current_selection == 3) ? 254 : ' ');
 
         // navigasi menu
         key = getch();
