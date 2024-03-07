@@ -2,6 +2,7 @@
 
 #include "account.h"
 #include "common.h"
+#include "wallet.h"
 
 void tampilMenuAwal() {
     int current_selection = 1;
@@ -40,7 +41,6 @@ void tampilMenuAwal() {
         }
     } while (key != 13);
 }
-
 
 void tampilMenuLogin() {
     char username[21], password[21], key;
@@ -194,15 +194,16 @@ void tampilMenuUtama(char username[20]) {
     printf("MONEY TRACKING APP\n");
     printf("User: %s\n", username);
     printf("====================\n");
-    printf("Saldo: \n");
-    printf("Pengeluaran Bulan Ini: \n");
+    printf("Total Saldo: ");
+    formatRupiah(getTotalSaldo(username));
+    printf("\nPengeluaran Bulan Ini: \n");
 
     // isi
     do {
         gotoxy(1, 6);
         printf("%c Catat\n", (current_selection == 1) ? 254 : ' ');
         printf("%c Rekap\n", (current_selection == 2) ? 254 : ' ');
-        printf("%c dompet\n", (current_selection == 3) ? 254 : ' ');
+        printf("%c Dompet\n", (current_selection == 3) ? 254 : ' ');
         printf("%c keluar\n", (current_selection == 4) ? 254 : ' ');
 
         // navigasi menu
@@ -210,7 +211,7 @@ void tampilMenuUtama(char username[20]) {
 
         if ((key == 72) && (current_selection > 1)) {
             current_selection -= 1;
-        } else if ((key == 80) && (current_selection < 3)) {
+        } else if ((key == 80) && (current_selection < 4)) {
             current_selection += 1;
         } else if (key == 13) {
             switch (current_selection) {
@@ -221,8 +222,8 @@ void tampilMenuUtama(char username[20]) {
                     tampilMenuRekap(username);
                     break;
                 case 3:
-                	tampilMenuDompet(username);
-                	break;
+                    tampilMenuDompet(username);
+                    break;
                 case 4:
                     exit(1);
                     break;
@@ -230,7 +231,7 @@ void tampilMenuUtama(char username[20]) {
                     break;
             }
         }
-    } while (key != 14);
+    } while (key != 13);
 }
 
 void tampilMenuCatat(char username[20]) {
@@ -328,14 +329,9 @@ void tampilMenuRekap(char username[20]) {
         }
     } while (key != 13);
 }
-<<<<<<< Updated upstream
-void tampilMenuDompet(char username[20]){
-	int current_selection = 1;
-=======
 
 void tampilMenuDompet(char username[20]) {
-    int current_selection = 1;
->>>>>>> Stashed changes
+    int current_selection = 1, jmlDompet = 0;
     char key;
 
     clearScreen();
@@ -343,16 +339,14 @@ void tampilMenuDompet(char username[20]) {
     printf("MONEY TRACKING APP\n");
     printf("User: %s\n", username);
     printf("====================\n");
-    
-    //tampil dompet
+
+    // tampil dompet
+    jmlDompet = getDompet(username, true);
+    printf("====================\n");
 
     // isi
     do {
-<<<<<<< Updated upstream
-        
-=======
-        gotoxy(1, 4);
->>>>>>> Stashed changes
+        gotoxy(1, 4 + jmlDompet + 2);
         printf("%c Tambah dompet\n", (current_selection == 1) ? 254 : ' ');
         printf("%c Hapus dompet\n", (current_selection == 2) ? 254 : ' ');
         printf("%c Kembali\n", (current_selection == 3) ? 254 : ' ');
@@ -368,9 +362,23 @@ void tampilMenuDompet(char username[20]) {
             switch (current_selection) {
                 case 1:
                     // panggil prosedur tambah dompet
+                    if (jmlDompet < 10) {
+                        tampilMenuTambahDompet(username);
+                    } else {
+                        gotoxy(1, 9 + jmlDompet);
+                        printf("Tidak bisa menambah dompet, maksimal 10 dompet dalam 1 akun");
+                        key = 0;
+                    }
                     break;
                 case 2:
                     // panggil prosedur hapus dompet
+                    if (jmlDompet > 1) {
+                        // tampilMenuHapusDompet(username);
+                    } else {
+                        gotoxy(1, 9 + jmlDompet);
+                        printf("Tidak bisa menghapus dompet lagi, sisakan 1 dompet di akunmu");
+                        key = 0;
+                    }
                     break;
                 case 3:
                     tampilMenuUtama(username);
@@ -380,4 +388,76 @@ void tampilMenuDompet(char username[20]) {
             }
         }
     } while (key != 13);
+}
+
+void tampilMenuTambahDompet(char username[20]) {
+    char namadompet[21], key, jmlDompet, saldoawal[20];
+    int n = 0, p = 1, status = 1, saldo;
+
+    do {
+        clearScreen();
+        // print header
+        printf("MONEY TRACKING APP\n");
+        printf("Login\n");
+        printf("====================\n");
+
+        // tampil dompet
+        jmlDompet = getDompet(username, true);
+        printf("====================\n");
+
+        printf("Nama Dompet\t: \n");
+        printf("Saldo Awal\t: \n");
+        gotoxy(19, 4 + jmlDompet + 2);
+
+        do {
+            key = getch();
+
+            if (((key >= 'a' && key <= 'z') || (key >= 'A' && key <= 'Z') || (key >= '0' && key <= '9') || (key == ' ')) && (n < 20)) {
+                if (p == 1) {
+                    namadompet[n] = key;
+                    n++;
+                    printf("%c", key);
+                    gotoxy(19 + n, 5 + p + jmlDompet);
+                } else if ((p == 2) && (key >= '0' && key <= '9')) {
+                    saldoawal[n] = key;
+                    n++;
+                    printf("%c", key);
+                    gotoxy(19 + n, 5 + p + jmlDompet);
+                }
+            } else if (key == 13) {  // Enter key
+                if (n > 0) {
+                    if (p == 1) {
+                        namadompet[n] = '\0';
+                        p = 2;
+                        n = 0;
+                        gotoxy(19 + n, 5 + p + jmlDompet);
+                    } else {
+                        saldoawal[n] = '\0';
+                        sscanf(saldoawal, "%d", &saldo);
+                        p = 1;
+                        n = 0;
+                        break;
+                    }
+                }
+            } else if (key == 8) {  // Backspace key
+                if (n > 0) {
+                    printf("\b \b");
+                    n--;
+                }
+            }
+        } while (key != 27);  // ESC key
+
+        if (key == 13) {
+            status = tambahDompet(username, namadompet, saldo);
+            getch();
+        }
+    } while (status == 1 && key != 27);
+
+    if (status == 0) {
+        tampilMenuDompet(username);
+    }
+
+    if (key == 27) {
+        tampilMenuDompet(username);
+    }
 }
