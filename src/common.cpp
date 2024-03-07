@@ -34,9 +34,8 @@ char* formatRupiah(int uang) {
         printf("Memory allocation failed\n");
         exit(1);  // Exit the program if memory allocation fails
     }
-    strcpy(formatted, "Rp ");  // Add "Rp "
-    strcat(formatted, str);    // Concatenate the formatted string
-    strcat(formatted, ",00");  // Add ",00"
+    strcpy(formatted, "Rp");  // Add "Rp "
+    strcat(formatted, str);   // Concatenate the formatted string
 
     return formatted;
 }
