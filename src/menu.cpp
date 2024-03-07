@@ -361,7 +361,6 @@ void tampilMenuDompet(char username[20]) {
         } else if (key == 13) {
             switch (current_selection) {
                 case 1:
-                    // panggil prosedur tambah dompet
                     if (jmlDompet < 10) {
                         tampilMenuTambahDompet(username);
                     } else {

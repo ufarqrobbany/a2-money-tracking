@@ -28,6 +28,7 @@ void formatRupiah(int uang) {
         len++;
     }
 
+
     // Replace characters that are not digits, separators, or currency symbol with a space
     for (i = 0; i < len; i++) {
         if (!(isdigit(str[i]) || str[i] == '.' || str[i] == 'R' || str[i] == 'p')) {
