@@ -16,6 +16,5 @@ int getSaldoDompet(char username[20], int id_dompet);
 int getTotalSaldo(char username[20]);
 // kurangiSaldo
 // tambahSaldo
-// showDompet
-void showDompet(char username[20]);
+int getDompet(char username[20]);
 // tambahDompet
