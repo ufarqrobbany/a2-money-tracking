@@ -4,7 +4,7 @@
 #include "wallet.h"
 
 int login(char username[20], char password[20]) {
-    FILE *file = fopen("data/akun.dat", "rb");
+    FILE *file = fopen("data\\akun.dat", "rb");
     struct Account akun;
     bool usernameExists = false;
     bool passwordValid = false;
@@ -47,7 +47,7 @@ int daftar(char nama[20], char username[20], char password[20], char re_password
         return 1;
     }
 
-    FILE *file = fopen("data/akun.dat", "ab+");
+    FILE *file = fopen("data\\akun.dat", "ab+");
 
     if (file == NULL) {
         printf("\nGagal membuka file.\n");
