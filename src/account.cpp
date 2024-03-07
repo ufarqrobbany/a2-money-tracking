@@ -4,15 +4,10 @@
 #include "wallet.h"
 
 int login(char username[20], char password[20]) {
-    FILE *file = fopen("data/akun.dat", "rb");
+    FILE *file = fopen("data\\akun.dat", "rb");
     struct Account akun;
     bool usernameExists = false;
     bool passwordValid = false;
-
-    if (file == NULL) {
-        printf("\nGagal membuka file.\n");
-        return 1;
-    }
 
     while (fread(&akun, sizeof(struct Account), 1, file) == 1) {
         if (strcmp(akun.username, username) == 0) {
@@ -47,12 +42,7 @@ int daftar(char nama[20], char username[20], char password[20], char re_password
         return 1;
     }
 
-    FILE *file = fopen("data/akun.dat", "ab+");
-
-    if (file == NULL) {
-        printf("\nGagal membuka file.\n");
-        return 1;
-    }
+    FILE *file = fopen("data\\akun.dat", "ab+");
 
     struct Account akun;
     bool usernameExists = false;
