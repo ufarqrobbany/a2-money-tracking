@@ -1,5 +1,6 @@
-#include "account.h"
 #include "wallet.h"
+
+#include "account.h"
 
 // Buat dompet awal/default
 void buatDompetAwal(char username[20]) {
@@ -12,20 +13,16 @@ void buatDompetAwal(char username[20]) {
     strcpy(dompet.nama_dompet, "Dompet");
     dompet.saldo = 0;
 
-    sprintf(file_name, "data/wallets/wallet_%s.dat", username);
+    sprintf(file_name, "data\\wallets\\wallet_%s.dat", username);
     file = fopen(file_name, "wb");
 
-    if (file != NULL) {
-        fwrite(&dompet, sizeof(struct Wallet), 1, file);
-        fclose(file);
-    } else {
-        printf("Gagal membuka file\n");
-    }
+    fwrite(&dompet, sizeof(struct Wallet), 1, file);
+    fclose(file);
 }
 
 void showDompet(char username[20]) {
     char file_name[50];
-    sprintf(file_name, "data/wallets/wallet_%s.dat", username);
+    sprintf(file_name, "data\\wallets\\wallet_%s.dat", username);
 
     FILE *file = fopen(file_name, "rb");
     if (file == NULL) {
@@ -44,7 +41,7 @@ void showDompet(char username[20]) {
 
 int getSaldoDompet(char username[20], int id_dompet) {
     char file_name[50];
-    sprintf(file_name, "data/wallets/wallet_%s.dat", username);
+    sprintf(file_name, "data\\wallets\\wallet_%s.dat", username);
 
     FILE *file = fopen(file_name, "rb");
     if (file == NULL) {
@@ -67,7 +64,7 @@ int getSaldoDompet(char username[20], int id_dompet) {
 
 int getTotalSaldo(char username[20]) {
     char file_name[50];
-    sprintf(file_name, "data/wallets/wallet_%s.dat", username);
+    sprintf(file_name, "data\\wallets\\wallet_%s.dat", username);
 
     FILE *file = fopen(file_name, "rb");
     if (file == NULL) {
