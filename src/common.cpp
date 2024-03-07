@@ -11,15 +11,13 @@ void clearScreen() {
     system("cls");
 }
 
-char* formatRupiah(int uang) {
+void formatRupiah(int uang) {
     char str[20];
-    // Using snprintf to convert integer to string
     snprintf(str, sizeof(str), "%d", uang);
 
     int len = strlen(str);
     int i, j;
 
-    // Add separator dots every 3 digits from the end
     for (i = len - 3; i > 0; i -= 3) {
         for (j = len; j > i; j--) {
             str[j] = str[j - 1];
@@ -28,14 +26,40 @@ char* formatRupiah(int uang) {
         len++;
     }
 
-    // Add "Rp " and ",00" to the formatted string
-    char* formatted = (char*)malloc(strlen(str) + 6);  // Allocate memory for the formatted string
-    if (formatted == NULL) {
-        printf("Memory allocation failed\n");
-        exit(1);  // Exit the program if memory allocation fails
+    for (i = 0; i < len; i++) {
+        if (!(isdigit(str[i]) || str[i] == '.' || str[i] == 'R' || str[i] == 'p')) {
+            str[i] = ' ';
+        }
     }
-    strcpy(formatted, "Rp");  // Add "Rp "
-    strcat(formatted, str);   // Concatenate the formatted string
 
-    return formatted;
+    str[len] = '\0';
+
+    printf("Rp%s", str);
+}
+
+int getLengthFormatRupiah(int uang) {
+    char str[20];
+    snprintf(str, sizeof(str), "%d", uang);
+
+    int len = strlen(str);
+    int i, j;
+
+    for (i = len - 3; i > 0; i -= 3) {
+        for (j = len; j > i; j--) {
+            str[j] = str[j - 1];
+        }
+        str[i] = '.';
+        len++;
+    }
+
+    for (i = 0; i < len; i++) {
+        if (!(isdigit(str[i]) || str[i] == '.' || str[i] == 'R' || str[i] == 'p')) {
+            str[i] = ' ';
+        }
+    }
+
+    str[len] = '\0';
+
+    // Return the length of the formatted string (excluding null terminator)
+    return strlen(str);
 }
