@@ -462,7 +462,7 @@ void tampilMenuTambahDompet(char username[20]) {
 }
 
 void tampilMenuHapusDompet(char username[20]) {
-    int current_selection = 1, jmlDompet = 0, idKosong[10], kosong = 0;
+    int current_selection = 1, jmlDompet = 0;
     char key;
 
     clearScreen();
@@ -483,6 +483,7 @@ void tampilMenuHapusDompet(char username[20]) {
 
     // isi
     do {
+        int idKosong[100] = {}, kosong = 0;
         gotoxy(1, 5);
         while (fread(&dom, sizeof(struct Wallet), 1, file) == 1) {
             if (strcmp(dom.nama_dompet, "") != 0) {
@@ -505,10 +506,13 @@ void tampilMenuHapusDompet(char username[20]) {
             do {
                 current_selection -= 1;
             } while (isIdInKosong(current_selection, idKosong, kosong) && (current_selection > 1));
+            current_selection = (current_selection < 1) ? 1 : current_selection;  // Ensure it doesn't go below 1
         } else if ((key == 80) && (current_selection < getLastIDDompet(username))) {
             do {
                 current_selection += 1;
             } while (isIdInKosong(current_selection, idKosong, kosong) && (current_selection < getLastIDDompet(username)));
+
+            current_selection = (current_selection > getLastIDDompet(username)) ? getLastIDDompet(username) : current_selection;  // Ensure it doesn't exceed last ID
         } else if (key == 13) {
             fclose(file);
             tampilKonfirmasiHapusDompet(username, getNamaDompet(username, current_selection), current_selection);
