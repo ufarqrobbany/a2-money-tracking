@@ -10,12 +10,8 @@ struct Wallet {
 };
 
 void buatDompetAwal(char username[20]);
-
-// getSaldo
 int getSaldoDompet(char username[20], int id_dompet);
-// getTotalSaldo
 int getTotalSaldo(char username[20]);
-// kurangiSaldo
 int getLastIDDompet(char username[20]);
 int getFirstNonEmptyID(int idKosong[], int kosong, int lastID);
 int getDompet(char username[20], bool display);
