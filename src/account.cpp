@@ -74,6 +74,30 @@ int daftar(char nama[20], char username[20], char password[20], char re_password
     }
 
     fclose(file);
-    
     return 1;
+}
+
+const char *getNamaUser(const char username[20]) {
+    FILE *file = fopen("data\\akun.dat", "rb");
+
+    if (file == NULL) {
+        printf("Gagal membuka file akun\n");
+        return NULL;  // Tidak dapat membuka file
+    }
+
+    static char nama[50];  // asumsikan panjang nama maksimum 49 karakter
+
+    struct Account akun;
+
+    while (fread(&akun, sizeof(struct Account), 1, file) == 1) {
+        if (strcmp(akun.username, username) == 0) {
+            fclose(file);
+            strncpy(nama, akun.nama, sizeof(nama) - 1);
+            nama[sizeof(nama) - 1] = '\0';  // Pastikan null-terminated
+            return nama;
+        }
+    }
+
+    fclose(file);
+    return NULL;  // Username tidak ditemukan
 }

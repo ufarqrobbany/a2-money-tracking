@@ -11,3 +11,4 @@ struct Account {
 
 int login(char username[20], char password[20]);
 int daftar(char nama[20], char username[20], char password[20], char re_password[20]);
+const char *getNamaUser(const char username[20]);
