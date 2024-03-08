@@ -1,6 +1,7 @@
 #include "menu.h"
 
 #include "account.h"
+#include "activity.h"
 #include "common.h"
 #include "wallet.h"
 
@@ -206,7 +207,6 @@ void tampilMenuUtama(char username[20]) {
         printf("%c Dompet\n", (current_selection == 3) ? 254 : ' ');
         printf("\n%c Keluar\n", (current_selection == 4) ? 254 : ' ');
 
-
         // navigasi menu
         key = getch();
 
@@ -263,6 +263,7 @@ void tampilMenuCatat(char username[20]) {
             switch (current_selection) {
                 case 1:
                     // panggil prosedur catat pengeluaran
+                    tampilMenuCatatPengeluaran(username);
                     break;
                 case 2:
                     // panggil prosedur catat pemasukan
@@ -275,6 +276,398 @@ void tampilMenuCatat(char username[20]) {
             }
         }
     } while (key != 13);
+}
+
+void tampilMenuCatatPengeluaran(char username[20]) {
+    char key, nominalstr[20];
+    int n = 0, status = 1, nominal = 0;
+
+    clearScreen();
+    // print header
+    printf("MONEY TRACKING APP\n");
+    printf("Catat Pengeluaran\n");
+    printf("====================\n");
+
+    printf("Nominal \t: ");
+    formatRupiah(nominal);
+    printf("\n");
+    gotoxy(21, 4);
+
+    do {
+        key = getch();
+
+        if (((key >= '0' && key <= '9')) && (n < 9)) {
+            if (!(n == 0 && key == '0')) {
+                nominalstr[n] = key;
+                n++;
+                sscanf(nominalstr, "%d", &nominal);
+
+                gotoxy(19, 4);
+                printf("                  ");
+                gotoxy(19, 4);
+                formatRupiah(nominal);
+                gotoxy(19 + getLengthFormatRupiah(nominal) + 2, 4);
+            }
+        } else if (key == 13) {  // Enter key
+            if (n > 0) {
+                nominalstr[n] = '\0';
+                sscanf(nominalstr, "%d", &nominal);
+                n = 0;
+                // gotoxy(19 + n, 3);
+                break;
+            }
+        } else if (key == 8) {  // Backspace key
+            if (n > 0) {
+                // if (p == 2) {
+                //     printf("\b \b");
+                // }
+                n--;
+
+                nominalstr[n] = '\0';
+                if (nominalstr[0] == '\0') {
+                    nominal = 0;
+                } else {
+                    sscanf(nominalstr, "%d", &nominal);
+                }
+
+                gotoxy(19, 4);
+                printf("                  ");
+                gotoxy(19, 4);
+                formatRupiah(nominal);
+                gotoxy(19 + getLengthFormatRupiah(nominal) + 2, 4);
+            }
+        }
+    } while (key != 27);  // ESC key
+
+    if (key == 13) {
+        tampilPilihKategori(username, 1, nominal);
+    }
+
+    if (key == 27) {
+        tampilMenuCatat(username);
+    }
+}
+
+void tampilPilihKategori(char username[20], int jenis, int nominal) {
+    int current_selection = 1;
+    char key, j;
+    // char *kategori[100];
+    char kategori[100][20];
+
+    clearScreen();
+    // print header
+    printf("MONEY TRACKING APP\n");
+    printf("User: %s\n", username);
+    printf("====================\n");
+    printf("Pilih kategori\n");
+
+    Activity act;
+    char file_name[50];
+    sprintf(file_name, "data\\activities\\activity_%s.dat", username);
+
+    FILE *file = fopen(file_name, "rb");
+
+    // isi
+    do {
+        gotoxy(1, 5);
+        j = 2;
+
+        printf("%c Buat Kategori Baru\n\n", (current_selection == 1) ? 254 : ' ');
+
+        while (fread(&act, sizeof(struct Activity), 1, file) == 1) {
+            if (strcmp(act.jenis, "Pengeluaran") == 0) {
+                // kategori[j - 2] = act.kategori;
+                // printf("%c %s\n", (current_selection == j) ? 254 : ' ', act.kategori);
+                // j++;
+
+                // Check if the category already exists in the array
+                int found = 0;
+                for (int i = 2; i < j; i++) {
+                    if (strcmp(kategori[i - 2], act.kategori) == 0) {
+                        found = 1;
+                        break;
+                    }
+                }
+
+                // If the category is not found, add it to the array
+                if (!found) {
+                    strncpy(kategori[j - 2], act.kategori, sizeof(kategori[j - 2]) - 1);
+                    kategori[j - 2][sizeof(kategori[j - 2]) - 1] = '\0';  // Ensure null-terminated
+                    printf("%c %s\n", (current_selection == j) ? 254 : ' ', kategori[j - 2]);
+                    j++;
+
+                    // Break if the array is full to avoid buffer overflow
+                    if (j >= 20) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        printf("\n%c Kembali", (current_selection == j) ? 254 : ' ');
+
+        // navigasi menu
+        key = getch();
+
+        // Pindahkan posisi ke awal file
+        fseek(file, 0, SEEK_SET);
+
+        if ((key == 72) && (current_selection > 1)) {
+            current_selection -= 1;
+        } else if ((key == 80) && (current_selection < j)) {
+            current_selection += 1;
+        } else if (key == 13) {
+            fclose(file);
+            if (current_selection != j && current_selection != 1) {
+                tampilPilihDompet(username, jenis, kategori[current_selection - 2], nominal);
+            } else if (current_selection == j) {
+                tampilMenuCatatPengeluaran(username);
+            } else {
+                tampilBuatKategori(username, jenis, nominal);
+            }
+        }
+    } while (key != 13);
+    fclose(file);
+}
+
+void tampilBuatKategori(char username[20], int jenis, int nominal) {
+    char kategoribaru[21], key;
+    int n = 0, status = 1;
+
+    do {
+        clearScreen();
+        // print header
+        printf("MONEY TRACKING APP\n");
+        printf("Buat Kategori Baru\n");
+        printf("====================\n");
+        printf("Kategori: ");
+
+        gotoxy(11, 4);
+
+        do {
+            key = getch();
+
+            if (((key >= 'a' && key <= 'z') || (key >= 'A' && key <= 'Z') || (key >= '0' && key <= '9') || (key == ' ')) && (n < 20)) {
+                kategoribaru[n] = key;
+                n++;
+                printf("%c", key);
+                gotoxy(11 + n, 4);
+            } else if (key == 13) {  // Enter key
+                if (n > 0) {
+                    kategoribaru[n] = '\0';
+                    n = 0;
+                    break;
+                }
+            } else if (key == 8) {  // Backspace key
+                if (n > 0) {
+                    printf("\b \b");
+                    n--;
+                }
+            }
+        } while (key != 27);  // ESC key
+
+        if (key == 13) {
+            // pilihDompet
+            tampilPilihDompet(username, jenis, kategoribaru, nominal);
+        }
+    } while (status == 1 && key != 27);
+
+    if (status == 0) {
+        tampilPilihKategori(username, jenis, nominal);
+    }
+
+    if (key == 27) {
+        tampilPilihKategori(username, jenis, nominal);
+    }
+}
+
+void tampilPilihDompet(char username[20], int jenis, char kategori[20], int nominal) {
+    int current_selection = 1, jmlDompet = 0;
+    char key, initiate = 1, j, status = 1;
+
+    do {
+        clearScreen();
+        // print header
+        printf("MONEY TRACKING APP\n");
+        printf("User: %s\n", username);
+        printf("====================\n");
+        printf("Pilih dompet yang akan digunakan\n");
+
+        // hitung dompet
+        jmlDompet = getDompet(username, false);
+
+        Wallet dom;
+        char file_name[50];
+        sprintf(file_name, "data\\wallets\\wallet_%s.dat", username);
+
+        FILE *file = fopen(file_name, "rb");
+
+        // isi
+        do {
+            int idKosong[100] = {}, kosong = 0;
+            gotoxy(1, 5);
+            j = 0;
+
+            // Display ASCII 254 in the first row
+            if (initiate == 1) {
+                printf("%c ", 254);
+            } else {
+                printf("  ");  // Spaces to maintain alignment for other rows
+            }
+
+            // Membaca file untuk mencari ID yang kosong
+            while (fread(&dom, sizeof(struct Wallet), 1, file) == 1) {
+                if (strcmp(dom.nama_dompet, "") != 0) {
+                    if (j == 0) {
+                        gotoxy(1, 5);
+                    }
+
+                    // Check if in the first row to keep ASCII 254
+                    if (j == 0 && initiate == 1) {
+                        printf("%c %s, ", 254, dom.nama_dompet);
+                    } else {
+                        printf("%c %s, ", (current_selection == dom.id || initiate == 1) ? 254 : ' ', dom.nama_dompet);
+                    }
+
+                    formatRupiah(dom.saldo);
+                    printf("\n");
+                    j++;
+
+                    // Update current_selection if it's initially pointing to an ID in idKosong
+                    if (current_selection == dom.id && isIdInKosong(current_selection, idKosong, kosong)) {
+                        current_selection = dom.id;
+                    }
+                    initiate++;
+                } else {
+                    idKosong[kosong] = dom.id;
+                    kosong++;
+                }
+            }
+
+            // Menentukan nilai awal current_selection yang valid jika ID paling awal termasuk dalam idKosong
+            if (current_selection <= 0 || isIdInKosong(current_selection, idKosong, kosong)) {
+                for (int i = 1; i <= getLastIDDompet(username) + 1; ++i) {
+                    if (!isIdInKosong(i, idKosong, kosong)) {
+                        current_selection = i;
+                        break;
+                    }
+                }
+            }
+            printf("\n%c Kembali", (current_selection == getLastIDDompet(username) + 1) ? 254 : ' ');
+
+            // navigasi menu
+            key = getch();
+
+            initiate = 2;
+
+            // Pindahkan posisi ke awal file
+            fseek(file, 0, SEEK_SET);
+
+            if ((key == 72) && (current_selection > 1)) {
+                do {
+                    current_selection -= 1;
+                } while (isIdInKosong(current_selection, idKosong, kosong) && (current_selection > 1));
+
+                // Adjust current_selection to the first non-empty ID if necessary
+                if (isIdInKosong(current_selection, idKosong, kosong)) {
+                    int firstNonEmptyID = getFirstNonEmptyID(idKosong, kosong, getLastIDDompet(username));
+                    if (firstNonEmptyID > 0) {
+                        current_selection = firstNonEmptyID;
+                    }
+                }
+
+                current_selection = (current_selection < 1) ? 1 : current_selection;
+            } else if ((key == 80) && (current_selection < getLastIDDompet(username) + 1)) {
+                do {
+                    current_selection += 1;
+                } while (isIdInKosong(current_selection, idKosong, kosong) && (current_selection < getLastIDDompet(username) + 1));
+
+                // Adjust current_selection to the first non-empty ID if necessary
+                if (isIdInKosong(current_selection, idKosong, kosong)) {
+                    int firstNonEmptyID = getFirstNonEmptyID(idKosong, kosong, getLastIDDompet(username));
+                    if (firstNonEmptyID > 0) {
+                        current_selection = firstNonEmptyID;
+                    }
+                }
+
+                current_selection = (current_selection > getLastIDDompet(username) + 1) ? getLastIDDompet(username) + 1 : current_selection;
+            } else if (key == 13) {
+                fclose(file);
+                if (current_selection == getLastIDDompet(username) + 1) {
+                    tampilPilihKategori(username, jenis, nominal);
+                } else {
+                    if ((getSaldoDompet(username, current_selection) - nominal) < 0) {
+                        printf("\nSaldo pada dompet tersebut kurang");
+                        status = 1;
+                        getch();
+                    } else {
+                        tampilKonfirmasiCatatPengeluaran(username, jenis, kategori, current_selection, nominal);
+                        status = 0;
+                    }
+                }
+            }
+        } while (key != 13);
+        fclose(file);
+    } while (status == 1);
+}
+
+void tampilKonfirmasiCatatPengeluaran(char username[20], int jenis, char kategori[20], int iddompet, int nominal) {
+    int current_selection = 1, status = 1;
+    char key;
+
+    do {
+        clearScreen();
+        // print header
+        printf("MONEY TRACKING APP\n");
+        printf("User: %s\n", username);
+        printf("====================\n");
+        printf("Catat Pengeluaran\n");
+        printf("====================\n");
+        // formatRupiah(nominal);
+        // printf(" akan dikurangi dari dompet %s\n", getNamaDompet(username, iddompet));
+        printf("Jumlah Pengeluaran: ");
+        formatRupiah(nominal);
+        printf("\nDari Dompet: %s\n", getNamaDompet(username, iddompet));
+        printf("Kategori: %s\n", kategori);
+
+        int temp;
+        temp = getSaldoDompet(username, iddompet);
+
+        printf("\nSaldo Dompet \"%s\": ", getNamaDompet(username, iddompet));
+        formatRupiah(temp);
+        printf("\nDompet \"%s\" akan berkurang menjadi ", getNamaDompet(username, iddompet));
+        formatRupiah(temp - nominal);
+
+        // isi
+        do {
+            gotoxy(1, 12);
+            printf("%c Konfirmasi\n", (current_selection == 1) ? 254 : ' ');
+            printf("%c Kembali\n", (current_selection == 2) ? 254 : ' ');
+
+            // navigasi menu
+            key = getch();
+
+            if ((key == 72) && (current_selection > 1)) {
+                current_selection -= 1;
+            } else if ((key == 80) && (current_selection < 2)) {
+                current_selection += 1;
+            } else if (key == 13) {
+                switch (current_selection) {
+                    case 1:
+                        status = catatPengeluaran(username, kategori, iddompet, nominal);
+                        getch();
+                        break;
+                    default:
+                        tampilPilihDompet(username, jenis, kategori, nominal);
+                        break;
+                }
+            }
+        } while (key != 13);
+    } while (status == 1);
+
+    if (status == 0) {
+        tampilMenuUtama(username);
+    }
 }
 
 void tampilMenuRekap(char username[20]) {
@@ -688,7 +1081,7 @@ void tampilMenuUbahNamaDompet(char username[20]) {
     printf("MONEY TRACKING APP\n");
     printf("User: %s\n", username);
     printf("====================\n");
-    printf("Pilih dompet yang akan dihapus\n");
+    printf("Pilih dompet yang akan diubah namanya\n");
 
     // hitung dompet
     jmlDompet = getDompet(username, false);
@@ -852,4 +1245,3 @@ void tampilMenuInputNamaDompet(char username[20], int id_dompet) {
         tampilMenuDompet(username);
     }
 }
-

@@ -311,3 +311,45 @@ int ubahNamaDompet(char username[20], int id_dompet, char namabaru[20]) {
     fclose(file);
     return 1;
 }
+
+void kurangiSaldo(char username[20], int id_dompet, int nominal) {
+    FILE *file;
+    char file_name[50];
+    struct Wallet rDompet;
+    bool dompetFound = false;
+
+    sprintf(file_name, "data\\wallets\\wallet_%s.dat", username);
+    file = fopen(file_name, "rb+");
+
+    if (file == NULL) {
+        printf("\nGagal membuka file dompet\n");
+        exit(1);
+    }
+
+    rewind(file);
+
+    while (fread(&rDompet, sizeof(struct Wallet), 1, file) == 1) {
+        if (rDompet.id == id_dompet) {
+            dompetFound = true;
+
+            // Update the wallet balance
+            rDompet.saldo = rDompet.saldo - nominal;
+            // Assuming other members need to be preserved, update them as well
+
+            // Set the file position to overwrite the wallet data
+            long position = ftell(file) - sizeof(struct Wallet);
+            fseek(file, position, SEEK_SET);
+
+            // Write back the updated wallet data
+            fwrite(&rDompet, sizeof(struct Wallet), 1, file);
+
+            break;  // Exit the loop since the wallet is found and updated
+        }
+    }
+
+    fclose(file);
+
+    if (!dompetFound) {
+        printf("\nDompet tidak ditemukan\n", id_dompet);
+    }
+}

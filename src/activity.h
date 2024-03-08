@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <time.h>
 
 struct Activity {
@@ -11,3 +12,5 @@ struct Activity {
 };
 
 void buatActivity(char username[20]);
+int getKategori(char username[20], int jenis);
+int catatPengeluaran(char username[20], char kategori[20], int iddompet, int nominal);
