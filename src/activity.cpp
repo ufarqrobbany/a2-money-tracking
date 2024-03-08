@@ -192,7 +192,7 @@ void getHarian(char username[20]) {
             }
         }
 
-        printf("\033[1mRekap Hari Ini\033[0m (%s, %02d %s %04d)\n", namaHari[localTime->tm_wday], localTime->tm_mday, namaBulan[localTime->tm_mon], localTime->tm_year + 1900);
+        printf("\033[1mRekap Hari Ini\033[0m (%s, %02d %s %04d)\n", namaHari[localtime(&currentTime)->tm_wday], localtime(&currentTime)->tm_mday, namaBulan[localtime(&currentTime)->tm_mon], localtime(&currentTime)->tm_year + 1900);
         printf("Total Pemasukan Hari Ini : \033[1;32m");
         formatRupiah(totalpemasukan);
         printf("\033[0m\n");
@@ -270,7 +270,7 @@ void getBulanan(char username[20]) {
             }
         }
 
-        printf("\033[1mRekap Bulan Ini\033[0m (%s %04d)\n", namaBulan[localTime->tm_mon], localTime->tm_year + 1900);
+        printf("\033[1mRekap Bulan Ini\033[0m (%s %04d)\n", namaBulan[localtime(&currentTime)->tm_mon], localtime(&currentTime)->tm_year + 1900);
         printf("Total Pemasukan Bulan Ini : \033[1;32m");
         formatRupiah(totalpemasukan);
         printf("\033[0m\n");
@@ -310,7 +310,6 @@ void getBulanan(char username[20]) {
         tampilMenuRekap(username);
     }
 }
-
 void getMingguan(char username[20]) {
     char key;
     do {
@@ -319,8 +318,6 @@ void getMingguan(char username[20]) {
         sprintf(file_name, "data\\activities\\activity_%s.dat", username);
 
         int totalpemasukan = 0, totalpengeluaran = 0;
-
-        int n = 0;
 
         FILE *file = fopen(file_name, "rb");
         if (file == NULL) {
@@ -339,7 +336,7 @@ void getMingguan(char username[20]) {
             int activityWeek = localtime(&act.waktu)->tm_yday / 7;
 
             // Memeriksa jika aktivitas berada dalam minggu ini
-            if (localTime->tm_year == localtime(&act.waktu)->tm_year && activityWeek == localtime(&act.waktu)->tm_yday / 7) {
+            if (localtime(&currentTime)->tm_year == localtime(&act.waktu)->tm_year && activityWeek == localtime(&currentTime)->tm_yday / 7) {
                 if (strcmp(act.jenis, "Transfer") != 0 && strcmp(getNamaDompet(username, act.id_dompet), "") != 0) {
                     if (strcmp(act.jenis, "Pemasukan") == 0) {
                         totalpemasukan += act.nominal;
@@ -350,7 +347,7 @@ void getMingguan(char username[20]) {
             }
         }
 
-        printf("\033[1mRekap Minggu Ini\033[0m (Minggu %d, %04d)\n", localTime->tm_yday / 7, localTime->tm_year + 1900);
+        printf("\033[1mRekap Minggu Ini\033[0m (Minggu %d, %04d)\n", localtime(&currentTime)->tm_yday / 7, localtime(&currentTime)->tm_year + 1900);
         printf("Total Pemasukan Minggu Ini : \033[1;32m");
         formatRupiah(totalpemasukan);
         printf("\033[0m\n");
@@ -359,7 +356,7 @@ void getMingguan(char username[20]) {
         printf("\033[0m\n");
         printf("----------------------------------------------\n");
 
-        // FSEEK KEmbali ke 0
+        // FSEEK Kembali ke 0
         fseek(file, 0, SEEK_SET);
 
         // tampil rekap
@@ -368,7 +365,7 @@ void getMingguan(char username[20]) {
             int activityWeek = localtime(&act.waktu)->tm_yday / 7;
 
             // Memeriksa jika aktivitas berada dalam minggu ini
-            if (localTime->tm_year == localtime(&act.waktu)->tm_year && activityWeek == localtime(&act.waktu)->tm_yday / 7) {
+            if (localtime(&currentTime)->tm_year == localtime(&act.waktu)->tm_year && activityWeek == localtime(&currentTime)->tm_yday / 7) {
                 if (strcmp(act.jenis, "Transfer") != 0 && strcmp(getNamaDompet(username, act.id_dompet), "") != 0) {
                     printf("Waktu\t: %02d:%02d:%02d %s, %02d %s %04d\n", localtime(&act.waktu)->tm_hour, localtime(&act.waktu)->tm_min, localtime(&act.waktu)->tm_sec, namaHari[localtime(&act.waktu)->tm_wday], localtime(&act.waktu)->tm_mday, namaBulan[localtime(&act.waktu)->tm_mon], localtime(&act.waktu)->tm_year + 1900);
                     if (strcmp(act.jenis, "Pemasukan") == 0) {
