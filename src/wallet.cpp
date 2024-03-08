@@ -28,12 +28,12 @@ int getDompet(char username[20], bool display) {
 
     FILE *file = fopen(file_name, "rb");
     if (file == NULL) {
-        printf("\nGagal membuka file\n");
+        printf("\nGagal membuka file                          \n");
         return 0;
     }
 
     if (display) {
-        printf("Daftar Dompet:\n");
+        printf("Daftar dompet :\n");
     }
     struct Wallet wallet;
     while (fread(&wallet, sizeof(struct Wallet), 1, file) == 1) {
@@ -58,7 +58,7 @@ int getSaldoDompet(char username[20], int id_dompet) {
 
     FILE *file = fopen(file_name, "rb");
     if (file == NULL) {
-        printf("\nGagal membuka file dompet\n");
+        printf("\nGagal membuka file dompet                              \n");
         return -1;
     }
 
@@ -71,7 +71,7 @@ int getSaldoDompet(char username[20], int id_dompet) {
     }
 
     fclose(file);
-    printf("\nDompet dengan ID '%d' tidak ditemukan\n", id_dompet);
+    printf("\nDompet dengan ID '%d' tidak ditemukan                          \n", id_dompet);
     return -1;
 }
 
@@ -81,7 +81,7 @@ char *getNamaDompet(char username[20], int id_dompet) {
 
     FILE *file = fopen(file_name, "rb");
     if (file == NULL) {
-        printf("\nGagal membuka file dompet\n");
+        printf("\nGagal membuka file dompet                      \n");
         exit(1);
     }
 
@@ -94,7 +94,7 @@ char *getNamaDompet(char username[20], int id_dompet) {
             char *nama_dompet = (char *)malloc(strlen(wallet.nama_dompet) + 1);
 
             if (nama_dompet == NULL) {
-                printf("\nGagal melakukan alokasi memori\n");
+                printf("\nGagal melakukan alokasi memori                         \n");
                 exit(1);
             }
 
@@ -106,7 +106,7 @@ char *getNamaDompet(char username[20], int id_dompet) {
     }
 
     fclose(file);
-    printf("\nDompet dengan ID '%d' tidak ditemukan\n", id_dompet);
+    printf("\nDompet dengan ID '%d' tidak ditemukan                           \n", id_dompet);
     return NULL;  // Kembalikan NULL jika dompet tidak ditemukan
 }
 
@@ -117,7 +117,7 @@ int getLastIDDompet(char username[20]) {
 
     FILE *file = fopen(file_name, "rb");
     if (file == NULL) {
-        printf("\nGagal membuka file dompet\n");
+        printf("\nGagal membuka file dompet                     \n");
         return -1;
     }
 
@@ -157,7 +157,7 @@ int getTotalSaldo(char username[20]) {
 
     FILE *file = fopen(file_name, "rb");
     if (file == NULL) {
-        printf("\nGagal membuka file dompet\n");
+        printf("\nGagal membuka file dompet                        \n");
         return -1;
     }
 
@@ -196,7 +196,7 @@ int tambahDompet(char username[20], char nama_dompet[20], int saldo_awal) {
     while (fread(&rDompet, sizeof(struct Wallet), 1, file) == 1) {
         if (strcmp(rDompet.nama_dompet, dompet.nama_dompet) == 0) {
             dompetNameExists = true;
-            printf("\nNama dompet sudah ada\n");
+            printf("\nNama dompet sudah ada                       \n");
             fclose(file);
             return 1;
         }
@@ -205,7 +205,7 @@ int tambahDompet(char username[20], char nama_dompet[20], int saldo_awal) {
     if (!dompetNameExists) {
         fseek(file, 0, SEEK_END);
         fwrite(&dompet, sizeof(struct Wallet), 1, file);
-        printf("\nBerhasil menambah dompet baru\n");
+        printf("\nBerhasil menambah dompet baru                   \n");
         fclose(file);
         return 0;
     }
@@ -231,7 +231,7 @@ int hapusDompet(char username[20], int id_dompet) {
     while (fread(&rDompet, sizeof(struct Wallet), 1, file) == 1) {
         if (rDompet.id == id_dompet) {
             dompetFound = true;
-            printf("\nDompet %s berhasil dihapus\n", getNamaDompet(username, id_dompet));
+            printf("\nDompet \"%s\" berhasil dihapus                         \n", getNamaDompet(username, id_dompet));
 
             // Menggeser posisi file untuk menimpa data dompet yang akan dihapus
             long position = ftell(file) - sizeof(struct Wallet);
@@ -247,7 +247,7 @@ int hapusDompet(char username[20], int id_dompet) {
     }
 
     if (!dompetFound) {
-        printf("\nDompet tidak ditemukan\n", id_dompet);
+        printf("\nDompet tidak ditemukan                          \n", id_dompet);
         fclose(file);
         return 1;
     }
@@ -268,13 +268,13 @@ int ubahNamaDompet(char username[20], int id_dompet, char namabaru[20]) {
     file = fopen(file_name, "rb+");
 
     if (file == NULL) {
-        printf("\nGagal membuka file dompet\n");
+        printf("\nGagal membuka file dompet                         \n");
         return 1;
     }
 
     while (fread(&rDompet, sizeof(struct Wallet), 1, file) == 1) {
         if (strcmp(rDompet.nama_dompet, namabaru) == 0) {
-            printf("\nNama dompet \"%s\" sudah ada\n", namabaru);
+            printf("\nNama dompet \"%s\" sudah ada                       \n", namabaru);
             fclose(file);
             return 1;
         }
@@ -285,7 +285,7 @@ int ubahNamaDompet(char username[20], int id_dompet, char namabaru[20]) {
     while (fread(&rDompet, sizeof(struct Wallet), 1, file) == 1) {
         if (rDompet.id == id_dompet) {
             dompetFound = true;
-            printf("\nDompet \"%s\" berhasil diubah nama menjadi \"%s\"\n", namalama, namabaru);
+            printf("\nDompet \"%s\" berhasil diubah nama menjadi \"%s\"                \n", namalama, namabaru);
 
             // Menggeser posisi file untuk menimpa data dompet yang akan diubah namanya
             long position = ftell(file) - sizeof(struct Wallet);
@@ -303,7 +303,7 @@ int ubahNamaDompet(char username[20], int id_dompet, char namabaru[20]) {
     }
 
     if (!dompetFound) {
-        printf("\nDompet tidak ditemukan\n", id_dompet);
+        printf("\nDompet tidak ditemukan\n                         ", id_dompet);
         fclose(file);
         return 1;
     }
@@ -322,7 +322,7 @@ void kurangiSaldo(char username[20], int id_dompet, int nominal) {
     file = fopen(file_name, "rb+");
 
     if (file == NULL) {
-        printf("\nGagal membuka file dompet\n");
+        printf("\nGagal membuka file dompet                       \n");
         exit(1);
     }
 
@@ -342,7 +342,7 @@ void kurangiSaldo(char username[20], int id_dompet, int nominal) {
     fclose(file);
 
     if (!dompetFound) {
-        printf("\nDompet tidak ditemukan\n", id_dompet);
+        printf("\nDompet tidak ditemukan                       \n", id_dompet);
     }
 }
 
@@ -356,7 +356,7 @@ void tambahSaldo(char username[20], int id_dompet, int nominal) {
     file = fopen(file_name, "rb+");
 
     if (file == NULL) {
-        printf("\nGagal membuka file dompet\n");
+        printf("\nGagal membuka file dompet                        \n");
         exit(1);
     }
 
@@ -376,6 +376,6 @@ void tambahSaldo(char username[20], int id_dompet, int nominal) {
     fclose(file);
 
     if (!dompetFound) {
-        printf("\nDompet tidak ditemukan\n", id_dompet);
+        printf("\nDompet tidak ditemukan                          \n", id_dompet);
     }
 }

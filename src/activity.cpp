@@ -95,6 +95,40 @@ int catatPemasukan(char username[20], char kategori[20], int iddompet, int nomin
     // Tambah saldo
     tambahSaldo(username, iddompet, nominal);
 
-    printf("\nBerhasil mencatat pengeluaran\n");
+    printf("\nBerhasil mencatat pemasukan\n");
+    return 0;
+}
+
+int catatTransfer(char username[20], int id_dompet_asal, int id_dompet_tujuan, int nominal) {
+    FILE *file;
+    char file_name[50];
+    struct Activity act;
+
+    // Aktivitas
+    act.id = getLastIDActivity(username) + 1;
+    time_t rawtime;
+    act.waktu = time(&rawtime);
+    strcpy(act.jenis, "Transfer");
+    sprintf(act.kategori, "%d", id_dompet_tujuan);
+    act.nominal = nominal;
+    act.id_dompet = id_dompet_asal;
+
+    sprintf(file_name, "data\\activities\\activity_%s.dat", username);
+
+    file = fopen(file_name, "ab+");
+    if (file == NULL) {
+        printf("\nGagal membuka atau membuat file aktivitas\n");
+        return 1;
+    }
+
+    fseek(file, 0, SEEK_END);
+    fwrite(&act, sizeof(struct Activity), 1, file);
+    fclose(file);
+
+    // Transfer
+    kurangiSaldo(username, id_dompet_asal, nominal);
+    tambahSaldo(username, id_dompet_tujuan, nominal);
+
+    printf("\nBerhasil mencatat transer saldo\n");
     return 0;
 }
