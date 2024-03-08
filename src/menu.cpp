@@ -1023,7 +1023,7 @@ void tampilPilihTanggal(char username[20], int jenis, char kategori[20], int idd
 
             if ((key == 72) && (current_selection > 1)) {
                 current_selection -= 1;
-            } else if ((key == 80) && (current_selection < 2)) {
+            } else if ((key == 80) && (current_selection < 3)) {
                 current_selection += 1;
             } else if (key == 13) {
                 switch (current_selection) {
@@ -1031,13 +1031,13 @@ void tampilPilihTanggal(char username[20], int jenis, char kategori[20], int idd
                         // status = catatPengeluaran(username, kategori, iddompet, nominal);
                         // getch();
                         if (jenis == 1) {
-                            tampilKonfirmasiCatatPengeluaran(username, jenis, kategori, current_selection, nominal, 0);
+                            tampilKonfirmasiCatatPengeluaran(username, jenis, kategori, iddompet, nominal, 0);
                         } else {
-                            tampilKonfirmasiCatatPemasukan(username, jenis, kategori, current_selection, nominal, 0);
+                            tampilKonfirmasiCatatPemasukan(username, jenis, kategori, iddompet, nominal, 0);
                         }
                         break;
                     case 2:
-                        tampilAturTanggal(username, jenis, kategori, current_selection, nominal);
+                        tampilAturTanggal(username, jenis, kategori, iddompet, nominal);
                         break;
                     default:
                         tampilPilihDompet(username, jenis, kategori, nominal);
