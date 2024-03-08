@@ -25,3 +25,4 @@ char *getNamaDompet(char username[20], int id_dompet);
 int isIdInKosong(int id, int idKosong[], int kosong);
 int ubahNamaDompet(char username[20], int id_dompet, char namabaru[20]);
 void kurangiSaldo(char username[20], int id_dompet, int nominal);
+void tambahSaldo(char username[20], int id_dompet, int nominal);

@@ -65,3 +65,36 @@ int catatPengeluaran(char username[20], char kategori[20], int iddompet, int nom
     printf("\nBerhasil mencatat pengeluaran\n");
     return 0;
 }
+
+int catatPemasukan(char username[20], char kategori[20], int iddompet, int nominal) {
+    FILE *file;
+    char file_name[50];
+    struct Activity act;
+
+    // Aktivitas
+    act.id = getLastIDActivity(username) + 1;
+    time_t rawtime;
+    act.waktu = time(&rawtime);
+    strcpy(act.jenis, "Pemasukan");
+    strcpy(act.kategori, kategori);
+    act.nominal = nominal;
+    act.id_dompet = iddompet;
+
+    sprintf(file_name, "data\\activities\\activity_%s.dat", username);
+
+    file = fopen(file_name, "ab+");
+    if (file == NULL) {
+        printf("\nGagal membuka atau membuat file aktivitas\n");
+        return 1;
+    }
+
+    fseek(file, 0, SEEK_END);
+    fwrite(&act, sizeof(struct Activity), 1, file);
+    fclose(file);
+
+    // Tambah saldo
+    tambahSaldo(username, iddompet, nominal);
+
+    printf("\nBerhasil mencatat pengeluaran\n");
+    return 0;
+}
