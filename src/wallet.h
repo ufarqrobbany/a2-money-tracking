@@ -10,12 +10,8 @@ struct Wallet {
 };
 
 void buatDompetAwal(char username[20]);
-
-// getSaldo
 int getSaldoDompet(char username[20], int id_dompet);
-// getTotalSaldo
 int getTotalSaldo(char username[20]);
-// kurangiSaldo
 int getLastIDDompet(char username[20]);
 int getFirstNonEmptyID(int idKosong[], int kosong, int lastID);
 int getDompet(char username[20], bool display);
@@ -24,3 +20,5 @@ int hapusDompet(char username[20], int id_dompet);
 char *getNamaDompet(char username[20], int id_dompet);
 int isIdInKosong(int id, int idKosong[], int kosong);
 int ubahNamaDompet(char username[20], int id_dompet, char namabaru[20]);
+void kurangiSaldo(char username[20], int id_dompet, int nominal);
+void tambahSaldo(char username[20], int id_dompet, int nominal);
