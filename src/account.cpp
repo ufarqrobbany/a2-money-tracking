@@ -14,7 +14,7 @@ int login(char username[20], char password[20]) {
             usernameExists = true;
             if (strcmp(akun.password, password) == 0) {
                 passwordValid = true;
-                printf("\nBerhasil login\n");
+                printf("\nBerhasil login                    \n");
                 fclose(file);
                 return 0;
             }
@@ -24,12 +24,12 @@ int login(char username[20], char password[20]) {
     fclose(file);
 
     if (!usernameExists) {
-        printf("\nUsername tidak ditemukan\n");
+        printf("\nUsername tidak ditemukan                   \n");
         return 1;
     }
 
     if (!passwordValid) {
-        printf("\nPassword salah\n");
+        printf("\nPassword salah                                 \n");
         return 1;
     }
 
@@ -38,7 +38,7 @@ int login(char username[20], char password[20]) {
 
 int daftar(char nama[20], char username[20], char password[20], char re_password[20]) {
     if (strcmp(password, re_password) != 0) {
-        printf("\nPassword tidak sama\n");
+        printf("\nPassword tidak sama                       \n");
         return 1;
     }
 
@@ -50,7 +50,7 @@ int daftar(char nama[20], char username[20], char password[20], char re_password
     while (fread(&akun, sizeof(struct Account), 1, file) == 1) {
         if (strcmp(akun.username, username) == 0) {
             usernameExists = true;
-            printf("\nUsername sudah ada\n");
+            printf("\nUsername sudah ada                    \n");
             fclose(file);  // Close the file on error
             return 1;
         }
@@ -64,7 +64,7 @@ int daftar(char nama[20], char username[20], char password[20], char re_password
         fseek(file, 0, SEEK_END);
 
         fwrite(&akun, sizeof(struct Account), 1, file);
-        printf("\nBerhasil buat akun\n");
+        printf("\nBerhasil buat akun                          \n");
         fclose(file);
 
         buatDompetAwal(username);
@@ -74,5 +74,6 @@ int daftar(char nama[20], char username[20], char password[20], char re_password
     }
 
     fclose(file);
+    
     return 1;
 }
