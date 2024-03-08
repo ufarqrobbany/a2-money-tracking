@@ -56,7 +56,7 @@ int catatPengeluaran(char username[20], char kategori[20], int iddompet, int nom
         // saat ini
         act.waktu = time(&rawtime);
     } else {
-        act.waktu = time(&waktu);
+        act.waktu = waktu;
     }
     strcpy(act.jenis, "Pengeluaran");
     strcpy(act.kategori, kategori);
@@ -94,7 +94,7 @@ int catatPemasukan(char username[20], char kategori[20], int iddompet, int nomin
         // saat ini
         act.waktu = time(&rawtime);
     } else {
-        act.waktu = time(&waktu);
+        act.waktu = waktu;
     }
     strcpy(act.jenis, "Pemasukan");
     strcpy(act.kategori, kategori);
